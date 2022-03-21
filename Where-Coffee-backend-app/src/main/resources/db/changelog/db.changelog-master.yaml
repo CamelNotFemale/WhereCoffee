@@ -1,0 +1,99 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/db.changelog-master.yaml
+  - changeSet:
+      id: 1
+      author: postgres
+      comment: "init changes"
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: name
+                  value: "John"
+              - column:
+                  name: email
+                  value: "John@domain.com"
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: "2"
+              - column:
+                  name: name
+                  value: "Julie"
+              - column:
+                  name: email
+                  value: "Julie@domain.com"
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: "3"
+              - column:
+                  name: name
+                  value: "Jennifer"
+              - column:
+                  name: email
+                  value: "Jennifer@domain.com"
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: "4"
+              - column:
+                  name: name
+                  value: "Helen"
+              - column:
+                  name: email
+                  value: "Helen@domain.com"
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: "5"
+              - column:
+                  name: name
+                  value: "Rachel"
+              - column:
+                  name: email
+                  value: "Rachel@domain.com"
+  - changeSet:
+      id: 2
+      author: postgres
+      comment: "init roles"
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: name
+                  value: "ROLE_USER"
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  value: "2"
+              - column:
+                  name: name
+                  value: "ROLE_MODERATOR"
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  value: "3"
+              - column:
+                  name: name
+                  value: "ROLE_ADMIN"
