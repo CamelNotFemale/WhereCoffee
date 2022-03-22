@@ -1,10 +1,19 @@
 package com.github.nazzrrg.wherecoffeeapplication.service;
 
 import com.github.nazzrrg.wherecoffeeapplication.model.Cafe;
+import com.github.nazzrrg.wherecoffeeapplication.payload.response.MessageResponse;
 import com.github.nazzrrg.wherecoffeeapplication.repo.CafeRepository;
+import com.github.nazzrrg.wherecoffeeapplication.utils.JSONMapper;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
 import java.util.List;
 
 @Service
