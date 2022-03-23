@@ -42,8 +42,8 @@ public class CafeController {
         lat = Double.parseDouble(location.split(",")[1]);
         for (Cafe cafe: cafeterias.getContent()) {
             // координата заведения
-            lon2 = Double.parseDouble(cafe.getLocation().split(",")[1]);
-            lat2 = Double.parseDouble(cafe.getLocation().split(",")[0]);
+            lon2 = cafe.getLocation().getLat();
+            lat2 = cafe.getLocation().getLng();
             // расстояние от точки поиска до заведения в километрах
             double result = 111.2 * Math.sqrt( (lon - lon2)*(lon - lon2) + (lat - lat2)*Math.cos(Math.PI*lon/180)*(lat - lat2)*Math.cos(Math.PI*lon/180));
             // все кофейни в радиусе 1км
@@ -64,6 +64,7 @@ public class CafeController {
                                                             @Value("${netcracker.app.areas}") String areas,
                                                             @Value("${netcracker.app.updateURL}") String urlPattern,
                                                             @Value("${netcracker.app.mapAPI}") String apikey) {
+        areas = "КофеБон";
         return mapService.updateCafeterias(res, areas, urlPattern, apikey);
     }
 }

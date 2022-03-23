@@ -3,6 +3,7 @@ package com.github.nazzrrg.wherecoffeeapplication.utils;
 import com.github.nazzrrg.wherecoffeeapplication.model.Cafe;
 import com.github.nazzrrg.wherecoffeeapplication.model.EDay;
 import com.github.nazzrrg.wherecoffeeapplication.model.Hours;
+import com.github.nazzrrg.wherecoffeeapplication.model.Point;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -62,7 +63,7 @@ public class JSONMapper {
         JSONObject geometry = (JSONObject) jo.get("geometry");
         JSONArray coordinates = (JSONArray) geometry.get("coordinates");
         String location = coordinates.toString();
-        cafe.setLocation(location.substring(1,location.length()-1));
+        cafe.setLocation(new Point(location));
         JSONObject properties = (JSONObject) jo.get("properties");
         cafe.setName(properties.get("name").toString());
         cafe.setDescription(properties.get("description").toString());

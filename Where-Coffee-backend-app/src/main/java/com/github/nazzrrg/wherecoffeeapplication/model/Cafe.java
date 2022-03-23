@@ -18,7 +18,9 @@ public class Cafe {
     private Long idApi;
     private String name;
     private String description;
-    private String location;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "point_id")
+    private Point location;
     private String address;
     private String url;
     private String phone;
@@ -39,7 +41,7 @@ public class Cafe {
         this.confirmed = false;
     }
 
-    public Cafe(Long idApi, String name, String description, String location, String address, String url, String phone) {
+    public Cafe(Long idApi, String name, String description, Point location, String address, String url, String phone) {
         this.idApi = idApi;
         this.name = name;
         this.description = description;
