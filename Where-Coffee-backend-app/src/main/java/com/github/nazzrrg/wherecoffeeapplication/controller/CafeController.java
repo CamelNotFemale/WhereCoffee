@@ -32,9 +32,25 @@ public class CafeController {
     }
 
     @GetMapping
-    public List<Cafe> getCafePage(@RequestParam(value = "page") Integer page) {
+    public List<Cafe> getCafePage(@RequestParam(value = "page") Integer page,
+                                  @RequestParam(value = "location", defaultValue = "59.965361,30.311645") String location) {
         /** переделать с dto */
         Page<Cafe> cafeterias = service.getPage(page);
+        double lon, lat, lon2, lat2;
+        // точка центра поиска
+        lon = Double.parseDouble(location.split(",")[0]);
+        lat = Double.parseDouble(location.split(",")[1]);
+        for (Cafe cafe: cafeterias.getContent()) {
+            // координата заведения
+            lon2 = Double.parseDouble(cafe.getLocation().split(",")[1]);
+            lat2 = Double.parseDouble(cafe.getLocation().split(",")[0]);
+            // расстояние от точки поиска до заведения в километрах
+            double result = 111.2 * Math.sqrt( (lon - lon2)*(lon - lon2) + (lat - lat2)*Math.cos(Math.PI*lon/180)*(lat - lat2)*Math.cos(Math.PI*lon/180));
+            // все кофейни в радиусе 1км
+            if (result <= 1) {
+                System.out.println(cafe);
+            }
+        }
         return cafeterias.getContent();
     }
 
