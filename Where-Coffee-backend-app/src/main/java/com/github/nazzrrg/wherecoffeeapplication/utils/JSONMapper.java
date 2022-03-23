@@ -1,7 +1,7 @@
 package com.github.nazzrrg.wherecoffeeapplication.utils;
 
 import com.github.nazzrrg.wherecoffeeapplication.model.Cafe;
-import com.github.nazzrrg.wherecoffeeapplication.model.Day;
+import com.github.nazzrrg.wherecoffeeapplication.model.EDay;
 import com.github.nazzrrg.wherecoffeeapplication.model.Hours;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -36,7 +36,7 @@ public class JSONMapper {
                 to = ((JSONObject) intervals.get(0)).get("to").toString();
             }
             if (checkEveryday(availability)) {
-                for (Day day : Day.values()) {
+                for (EDay day : EDay.values()) {
                     workingHours.add(new Hours(day.name(),
                             LocalTime.parse(from),
                             LocalTime.parse(to)));
@@ -44,7 +44,7 @@ public class JSONMapper {
             } else {
                 for (String day : (Set<String>) availability.keySet()) {
                     try {
-                        String checkDay = Day.valueOf(day).name();
+                        String checkDay = EDay.valueOf(day).name();
                         workingHours.add(new Hours(checkDay,
                                 LocalTime.parse(from),
                                 LocalTime.parse(to)));

@@ -8,6 +8,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,5 +42,9 @@ public class CafeService {
     }
     public void delete(long id) {
         repository.deleteById(id);
+    }
+    public Page<Cafe> getPage(int page) {
+        Pageable pageable = PageRequest.of(page, 5);
+        return repository.findAll(pageable);
     }
 }

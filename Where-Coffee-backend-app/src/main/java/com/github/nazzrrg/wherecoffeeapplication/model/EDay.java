@@ -1,6 +1,6 @@
 package com.github.nazzrrg.wherecoffeeapplication.model;
 
-public enum Day {
+public enum EDay {
     Monday,
     Tuesday,
     Wednesday,
