@@ -24,8 +24,8 @@ public class CafeService {
         this.repository = repository;
     }
 
-    public boolean create(@RequestBody Cafe cafe) {
-        if (!repository.existsById(cafe.getId())) {
+    public boolean create(Cafe cafe) {
+        if (!(cafe.getIdApi() != null && repository.existsByIdApi(cafe.getIdApi()))) {
             repository.save(cafe);
             return true;
         }

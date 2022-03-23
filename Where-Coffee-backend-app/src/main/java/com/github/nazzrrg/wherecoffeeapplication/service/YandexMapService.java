@@ -38,6 +38,7 @@ public class YandexMapService {
         for (int i =0; i< cafeterias.size(); i++) {
             JSONObject joCafe = (JSONObject) cafeterias.get(i);
             Cafe cafe = JSONMapper.toCafe(joCafe);
+            cafe.setConfirmed(true);
             if (cafeService.create(cafe)) {
                 count++;
             }

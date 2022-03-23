@@ -67,7 +67,7 @@ public class JSONMapper {
         cafe.setName(properties.get("name").toString());
         cafe.setDescription(properties.get("description").toString());
         JSONObject companyMetaData = (JSONObject) properties.get("CompanyMetaData");
-        cafe.setId(Long.parseLong(companyMetaData.get("id").toString()));
+        cafe.setIdApi(Long.parseLong(companyMetaData.get("id").toString()));
         cafe.setAddress(companyMetaData.get("address").toString());
         if (companyMetaData.get("url")!=null) cafe.setUrl(companyMetaData.get("url").toString());
         JSONArray phones = (JSONArray) companyMetaData.get("Phones");

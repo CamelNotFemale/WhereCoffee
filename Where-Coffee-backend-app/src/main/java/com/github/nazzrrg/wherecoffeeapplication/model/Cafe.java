@@ -1,6 +1,7 @@
 package com.github.nazzrrg.wherecoffeeapplication.model;
 
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,7 +12,10 @@ import java.util.List;
 @Table(name = "cafeterias")
 public class Cafe {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @JoinColumn(name="id_api", unique = true)
+    private Long idApi;
     private String name;
     private String description;
     private String location;
@@ -28,24 +32,29 @@ public class Cafe {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "cafeteria_id")
     private List<Grade> grades = new ArrayList<>();
+    @JoinColumn(name="confirmed", columnDefinition = "boolean default false")
+    private boolean confirmed;
 
     public Cafe() {
+        this.confirmed = false;
     }
 
-    public Cafe(Long id, String name, String description, String location, String address, String url, String phone) {
-        this.id = id;
+    public Cafe(Long idApi, String name, String description, String location, String address, String url, String phone) {
+        this.idApi = idApi;
         this.name = name;
         this.description = description;
         this.location = location;
         this.address = address;
         this.url = url;
         this.phone = phone;
+        this.confirmed = false;
     }
 
     @Override
     public String toString() {
         return "Cafe{" +
                 "id=" + id +
+                ", idApi=" + idApi +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", location='" + location + '\'' +
@@ -56,6 +65,7 @@ public class Cafe {
                 ", manager=" + manager +
                 ", workingHours=" + workingHours +
                 ", grades=" + grades +
+                ", confirmed=" + confirmed +
                 '}';
     }
 }
