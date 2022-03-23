@@ -47,4 +47,11 @@ public class CafeService {
         Pageable pageable = PageRequest.of(page, 15);
         return repository.findAll(pageable);
     }
+    public Page<Cafe> getPage(int page, String location, Double dist) {
+        Pageable pageable = PageRequest.of(page, 15);
+        // точка центра поиска
+        Double lat = Double.parseDouble(location.split(",")[0]);
+        Double lng = Double.parseDouble(location.split(",")[1]);
+        return repository.findNearbyCoffeeShops(lat, lng, dist, pageable);
+    }
 }

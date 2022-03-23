@@ -33,24 +33,10 @@ public class CafeController {
 
     @GetMapping
     public List<Cafe> getCafePage(@RequestParam(value = "page") Integer page,
-                                  @RequestParam(value = "location", defaultValue = "59.965361,30.311645") String location) {
+                                  @RequestParam(value = "location", defaultValue = "59.965361,30.311645") String location,
+                                  @RequestParam(value = "dist", defaultValue = "1.0") Double dist) {
         /** переделать с dto */
-        Page<Cafe> cafeterias = service.getPage(page);
-        double lon, lat, lon2, lat2;
-        // точка центра поиска
-        lon = Double.parseDouble(location.split(",")[0]);
-        lat = Double.parseDouble(location.split(",")[1]);
-        for (Cafe cafe: cafeterias.getContent()) {
-            // координата заведения
-            lon2 = cafe.getLocation().getLat();
-            lat2 = cafe.getLocation().getLng();
-            // расстояние от точки поиска до заведения в километрах
-            double result = 111.2 * Math.sqrt( (lon - lon2)*(lon - lon2) + (lat - lat2)*Math.cos(Math.PI*lon/180)*(lat - lat2)*Math.cos(Math.PI*lon/180));
-            // все кофейни в радиусе 1км
-            if (result <= 1) {
-                System.out.println(cafe);
-            }
-        }
+        Page<Cafe> cafeterias = service.getPage(page, location, dist);
         return cafeterias.getContent();
     }
 
@@ -64,7 +50,6 @@ public class CafeController {
                                                             @Value("${netcracker.app.areas}") String areas,
                                                             @Value("${netcracker.app.updateURL}") String urlPattern,
                                                             @Value("${netcracker.app.mapAPI}") String apikey) {
-        areas = "КофеБон";
         return mapService.updateCafeterias(res, areas, urlPattern, apikey);
     }
 }
