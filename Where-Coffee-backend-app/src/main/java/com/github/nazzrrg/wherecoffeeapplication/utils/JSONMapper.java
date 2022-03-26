@@ -80,7 +80,7 @@ public class JSONMapper {
             cafe.setPhone(phonesOnString);
         }
         JSONObject workingHours = (JSONObject) companyMetaData.get("Hours");
-        cafe.setWorkingHours(parseWorkingHours(workingHours));
+        if (workingHours != null) cafe.setWorkingHours(parseWorkingHours(workingHours));
 
         return cafe;
     }

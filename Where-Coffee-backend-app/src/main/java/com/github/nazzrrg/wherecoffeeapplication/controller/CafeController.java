@@ -1,6 +1,7 @@
 package com.github.nazzrrg.wherecoffeeapplication.controller;
 
 import com.github.nazzrrg.wherecoffeeapplication.model.Cafe;
+import com.github.nazzrrg.wherecoffeeapplication.payload.request.CafeRequest;
 import com.github.nazzrrg.wherecoffeeapplication.payload.response.MessageResponse;
 import com.github.nazzrrg.wherecoffeeapplication.service.CafeService;
 import com.github.nazzrrg.wherecoffeeapplication.service.UserService;
@@ -27,8 +28,9 @@ public class CafeController {
 
     @PostMapping
     //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
-    public void create(@RequestBody(required = false) Cafe cafe) {
+    public void create(@RequestBody(required = false) CafeRequest cafe) {
         /** переделать с dto */
+        System.out.println(cafe);
     }
 
     @GetMapping

@@ -20,6 +20,12 @@ public class Hours {
     public Hours() {
     }
 
+    public Hours(String weekday, String start_time, String end_time) {
+        this.weekday = weekday;
+        this.start_time = LocalTime.parse(start_time);
+        this.end_time = LocalTime.parse(end_time);
+    }
+
     public Hours(String weekday, LocalTime start_time, LocalTime end_time) {
         this.weekday = weekday;
         this.start_time = start_time;

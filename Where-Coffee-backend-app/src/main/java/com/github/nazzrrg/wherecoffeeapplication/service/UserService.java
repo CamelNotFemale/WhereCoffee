@@ -17,7 +17,10 @@ public class UserService {
     }
 
     public void create(@RequestBody User user) {
-        userRepository.save(user);
+        if (userRepository.existsByName(user.getName())) {
+            userRepository.save(user);
+        }
+        else new RuntimeException("Error: username is taken!");
     }
 
     public List<User> getAll() {
