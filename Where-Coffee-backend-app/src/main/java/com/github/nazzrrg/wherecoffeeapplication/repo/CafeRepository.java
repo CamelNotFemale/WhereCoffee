@@ -14,10 +14,10 @@ public interface CafeRepository extends PagingAndSortingRepository<Cafe, Long> {
     Optional<Cafe> findById(Long id);
     boolean existsByIdApi(Long idApi);
     @Query(value =
-            "select * from cafeterias\n" +
-            "where point_id in (\n" +
-            "        select id from points\n" +
-            "        where 111.2 * |/( (:lat - lat)^2 + ((:lng - lng)*cos(pi()*:lat/180))^2 ) <= :dist\n" +
+            "select * from cafeterias " +
+            "where point_id in (" +
+            "        select id from points" +
+            "        where 111.2 * |/( (:lat - lat)^2 + ((:lng - lng)*cos(pi()*:lat/180))^2 ) <= :dist" +
             "    )",
             nativeQuery = true)
     Page<Cafe> findNearbyCoffeeShops(Double lat, Double lng, Double dist, Pageable pageable);
