@@ -55,7 +55,7 @@ public class CafeController {
         return service.getById(id);
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/{id}/rewiew")
     public ResponseEntity<MessageResponse> addRewiew(@PathVariable long id,
                                                      @RequestBody GradeRequest grade) {
         User user = userService.getById(grade.getUserId());
