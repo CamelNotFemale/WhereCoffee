@@ -1,7 +1,9 @@
 package com.github.nazzrrg.wherecoffeeapplication.controller;
 
 import com.github.nazzrrg.wherecoffeeapplication.model.Cafe;
+import com.github.nazzrrg.wherecoffeeapplication.model.User;
 import com.github.nazzrrg.wherecoffeeapplication.payload.request.CafeRequest;
+import com.github.nazzrrg.wherecoffeeapplication.payload.request.GradeRequest;
 import com.github.nazzrrg.wherecoffeeapplication.payload.response.MessageResponse;
 import com.github.nazzrrg.wherecoffeeapplication.service.CafeService;
 import com.github.nazzrrg.wherecoffeeapplication.service.UserService;
@@ -28,7 +30,7 @@ public class CafeController {
 
     @PostMapping
     //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
-    public void create(@RequestBody(required = false) CafeRequest cafe) {
+    public void create(@RequestBody CafeRequest cafe) {
         /** переделать с dto */
         System.out.println(cafe);
     }
@@ -47,6 +49,12 @@ public class CafeController {
         return service.getById(id);
     }
 
+    @PostMapping("/{id}")
+    public ResponseEntity<MessageResponse> addRewiew(@PathVariable long id,
+                                                     @RequestBody GradeRequest grade) {
+        User user = userService.getById(grade.getUserId());
+        return service.addRewiew(id, user, grade);
+    }
     @PostMapping("/update")
     public ResponseEntity<MessageResponse> updateCafeterias(@RequestParam(value = "res",defaultValue = "1") Integer res,
                                                             @Value("${netcracker.app.areas}") String areas,

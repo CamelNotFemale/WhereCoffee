@@ -97,3 +97,35 @@ databaseChangeLog:
               - column:
                   name: name
                   value: "ROLE_ADMIN"
+  - changeSet:
+      id: 3
+      author: postgres
+      comment: "init perks"
+      changes:
+        - insert:
+            tableName: perks
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: title
+                  value: "FREE_WATER"
+        - insert:
+            tableName: perks
+            columns:
+              - column:
+                  name: id
+                  value: "2"
+              - column:
+                  name: title
+                  value: "TOILET"
+        - insert:
+            tableName: perks
+            columns:
+              - column:
+                  name: id
+                  value: "3"
+              - column:
+                  name: title
+                  value: "STREET_TERRACE"
