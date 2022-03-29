@@ -24,8 +24,8 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public List<User> getAll() {
-        return service.getAll();
+    public List<User> getUsersByRole(@RequestParam(value = "role", defaultValue = "ROLE_USER") String role) {
+        return service.getUsersByRole(role);
     }
 
     @GetMapping("/users/{id}")
