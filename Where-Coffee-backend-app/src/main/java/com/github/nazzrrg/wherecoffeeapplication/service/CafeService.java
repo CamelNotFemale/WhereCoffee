@@ -5,6 +5,7 @@ import com.github.nazzrrg.wherecoffeeapplication.payload.request.GradeRequest;
 import com.github.nazzrrg.wherecoffeeapplication.payload.response.MessageResponse;
 import com.github.nazzrrg.wherecoffeeapplication.repo.CafeRepository;
 import com.github.nazzrrg.wherecoffeeapplication.repo.PerkRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,8 @@ import java.util.Set;
 
 @Service
 public class CafeService {
+    @Value("${netcracker.app.itemsOnPage}")
+    private int itemsOnPage;
     private final CafeRepository repository;
     private final PerkRepository perkRepository;
 
@@ -33,21 +36,26 @@ public class CafeService {
         }
         return false;
     }
-    public List<Cafe> getAll() {
-        return (List<Cafe>) repository.findAll();
-    }
     public Cafe getById(long id) {
         return repository.findById(id).orElseThrow(RuntimeException::new);
     }
     public void delete(long id) {
         repository.deleteById(id);
     }
+
     public Page<Cafe> getPage(int page) {
-        Pageable pageable = PageRequest.of(page, 15);
+        Pageable pageable = PageRequest.of(page, itemsOnPage);
         return repository.findAll(pageable);
     }
+    public int getPageCount(String location, Double dist) {
+        // точка центра поиска
+        Double lat = Double.parseDouble(location.split(",")[0]);
+        Double lng = Double.parseDouble(location.split(",")[1]);
+        int cafeCount = repository.countNearbyCoffeeShops(lat, lng, dist);
+        return (int)Math.ceil((double) cafeCount/itemsOnPage);
+    }
     public Page<Cafe> getPage(int page, String location, Double dist) {
-        Pageable pageable = PageRequest.of(page, 15);
+        Pageable pageable = PageRequest.of(page, itemsOnPage);
         // точка центра поиска
         Double lat = Double.parseDouble(location.split(",")[0]);
         Double lng = Double.parseDouble(location.split(",")[1]);

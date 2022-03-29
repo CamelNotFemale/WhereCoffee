@@ -44,6 +44,12 @@ public class CafeController {
         return cafeterias.getContent();
     }
 
+    @GetMapping("/pages-count")
+    public int getCountPage(@RequestParam(value = "location", defaultValue = "59.965361,30.311645") String location,
+                            @RequestParam(value = "dist", defaultValue = "1.0") Double dist) {
+        return service.getPageCount(location, dist);
+    }
+
     @GetMapping("/{id}")
     public Cafe getCafe(@PathVariable long id) {
         return service.getById(id);
@@ -55,6 +61,7 @@ public class CafeController {
         User user = userService.getById(grade.getUserId());
         return service.addRewiew(id, user, grade);
     }
+
     @PostMapping("/update")
     public ResponseEntity<MessageResponse> updateCafeterias(@RequestParam(value = "res",defaultValue = "1") Integer res,
                                                             @Value("${netcracker.app.areas}") String areas,
