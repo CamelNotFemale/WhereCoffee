@@ -72,27 +72,10 @@ public class CafeService {
         Cafe cafe = getById(id);
 
         Set<Perk> perks = new HashSet<>();
-        gradeRequest.getPerks().forEach(perk -> {
-            switch (perk) {
-                case "FREE_WATER":
-                    Perk freeWater = perkRepository.findByTitle(EPerk.FREE_WATER)
-                            .orElseThrow(() -> new RuntimeException("Error: perk is not found."));
-                    perks.add(freeWater);
-
-                    break;
-                case "TOILET":
-                    Perk toilet = perkRepository.findByTitle(EPerk.TOILET)
-                            .orElseThrow(() -> new RuntimeException("Error: perk is not found."));
-                    perks.add(toilet);
-
-                    break;
-                case "STREET_TERRACE":
-                    Perk streetTerrace = perkRepository.findByTitle(EPerk.STREET_TERRACE)
-                            .orElseThrow(() -> new RuntimeException("Error: perk is not found."));
-                    perks.add(streetTerrace);
-
-                    break;
-            }
+        gradeRequest.getPerks().forEach(perkStr -> {
+            Perk perk = perkRepository.findByTitle(EPerk.valueOf(perkStr))
+                    .orElseThrow(() -> new RuntimeException("Error: perk is not found."));
+            perks.add(perk);
         });
 
         Grade grade = new Grade(gradeRequest.getComment(),

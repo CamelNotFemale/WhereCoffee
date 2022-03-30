@@ -14,7 +14,8 @@ public interface PerkRepository extends JpaRepository<Perk, Long> {
             "select" +
             "       case when count(*) > 0 then 'TRUE' else 'FALSE' end as exist_comment" +
             "       from grades " +
-            "where cafeteria_id = :cafeId AND user_id = :userId",
+            "where cafeteria_id = :cafeId AND user_id = :userId " +
+            "limit 1",
             nativeQuery = true)
     boolean alreadyExistingComment(Long cafeId, Long userId);
 }

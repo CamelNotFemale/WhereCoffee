@@ -18,13 +18,15 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     public void create(@RequestBody User user) {
         service.create(user);
     }
 
     @GetMapping("/users")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     public List<User> getUsersByRole(@RequestParam(value = "role", defaultValue = "ROLE_USER") String role) {
+        /** добавить параметр username - для поиска и limit - количество совпадений */
         return service.getUsersByRole(role);
     }
 
@@ -34,7 +36,7 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     public void delete(@PathVariable long id) {
         service.delete(id);
     }
