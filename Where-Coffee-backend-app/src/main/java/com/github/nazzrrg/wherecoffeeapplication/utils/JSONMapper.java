@@ -9,6 +9,7 @@ import org.json.simple.JSONObject;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -57,13 +58,21 @@ public class JSONMapper {
 
         return workingHours;
     }
+    private static String[] parseCoordinates(String location) {
+        location = location.substring(1, location.length()-1);
+        String[] coord = location.split(",");
+        String temp = coord[0];
+        coord[0] = coord[1];
+        coord[1] = temp;
+        return coord;
+    }
     public static Cafe toCafe(JSONObject jo) {
         Cafe cafe = new Cafe();
 
         JSONObject geometry = (JSONObject) jo.get("geometry");
         JSONArray coordinates = (JSONArray) geometry.get("coordinates");
         String location = coordinates.toString();
-        cafe.setLocation(new Point(location));
+        cafe.setLocation(new Point(parseCoordinates(location)));
         JSONObject properties = (JSONObject) jo.get("properties");
         cafe.setName(properties.get("name").toString());
         cafe.setDescription(properties.get("description").toString());

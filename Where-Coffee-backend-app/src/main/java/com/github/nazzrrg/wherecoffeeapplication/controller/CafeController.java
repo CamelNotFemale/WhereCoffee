@@ -8,9 +8,11 @@ import com.github.nazzrrg.wherecoffeeapplication.payload.response.MessageRespons
 import com.github.nazzrrg.wherecoffeeapplication.service.CafeService;
 import com.github.nazzrrg.wherecoffeeapplication.service.UserService;
 import com.github.nazzrrg.wherecoffeeapplication.service.YandexMapService;
+import com.github.nazzrrg.wherecoffeeapplication.utils.DTOMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +24,7 @@ public class CafeController {
     private final CafeService service;
     private final UserService userService;
     private final YandexMapService mapService;
+
     public CafeController(CafeService service, UserService userService, YandexMapService mapService) {
         this.service = service;
         this.userService = userService;
@@ -29,11 +32,8 @@ public class CafeController {
     }
 
     @PostMapping
-    //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public void create(@RequestBody CafeRequest cafe) {
-        /** переделать с dto
-         * создаваемые кофейни с confirmed = false */
-        System.out.println(cafe);
+        service.create(cafe);
     }
 
     @GetMapping
@@ -55,7 +55,27 @@ public class CafeController {
 
     @GetMapping("/{id}")
     public Cafe getCafe(@PathVariable long id) {
+        /** переделать с dto */
         return service.getById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void deleteCafe(@PathVariable long id) {
+        service.delete(id);
+    }
+
+    @PatchMapping("/{id}")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void updateCafe(@PathVariable long id,
+                           @RequestBody CafeRequest cafe) {
+        service.update(id, cafe);
+    }
+
+    @PostMapping("/{id}/confirm")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void confirmCafe(@PathVariable long id) {
+        service.confirm(id);
     }
 
     @PostMapping("/{id}/rewiew")

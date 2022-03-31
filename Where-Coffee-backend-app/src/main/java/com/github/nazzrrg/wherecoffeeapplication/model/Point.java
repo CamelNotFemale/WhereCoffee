@@ -18,10 +18,9 @@ public class Point {
 
     public Point() {
     }
-    public Point(String location) {
-        location = location.substring(1, location.length()-1);
-        lat = Double.parseDouble(location.split(",")[1]);
-        lng = Double.parseDouble(location.split(",")[0]);
+    public Point(String location[]) {
+        lat = Double.parseDouble(location[0]);
+        lng = Double.parseDouble(location[1]);
     }
     public Point(Double lat, Double lng) {
         this.lat = lat;

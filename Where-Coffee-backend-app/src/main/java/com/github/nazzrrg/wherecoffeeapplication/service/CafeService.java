@@ -1,10 +1,12 @@
 package com.github.nazzrrg.wherecoffeeapplication.service;
 
 import com.github.nazzrrg.wherecoffeeapplication.model.*;
+import com.github.nazzrrg.wherecoffeeapplication.payload.request.CafeRequest;
 import com.github.nazzrrg.wherecoffeeapplication.payload.request.GradeRequest;
 import com.github.nazzrrg.wherecoffeeapplication.payload.response.MessageResponse;
 import com.github.nazzrrg.wherecoffeeapplication.repo.CafeRepository;
 import com.github.nazzrrg.wherecoffeeapplication.repo.PerkRepository;
+import com.github.nazzrrg.wherecoffeeapplication.utils.DTOMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,12 +25,14 @@ public class CafeService {
     private int itemsOnPage;
     private final CafeRepository repository;
     private final PerkRepository perkRepository;
+    private final DTOMapper mapper;
 
-    public CafeService(CafeRepository repository, PerkRepository perkRepository) {
+    public CafeService(CafeRepository repository, PerkRepository perkRepository, DTOMapper mapper) {
         this.repository = repository;
         this.perkRepository = perkRepository;
+        this.mapper = mapper;
     }
-
+    /** создание кофеен из API */
     public boolean create(Cafe cafe) {
         if (!(cafe.getIdApi() != null && repository.existsByIdApi(cafe.getIdApi()))) {
             repository.save(cafe);
@@ -36,8 +40,23 @@ public class CafeService {
         }
         return false;
     }
+    /** создание собственных кофеен */
+    public void create(CafeRequest cafeRequest) {
+        Cafe cafe = mapper.toCafe(cafeRequest);
+        repository.save(cafe);
+    }
     public Cafe getById(long id) {
         return repository.findById(id).orElseThrow(RuntimeException::new);
+    }
+    public void update(long id, CafeRequest cafeRequest) {
+        Cafe cafeToBeUpdated = getById(id);
+        cafeToBeUpdated = mapper.fillCafeFromDTO(cafeToBeUpdated, cafeRequest);
+        repository.save(cafeToBeUpdated);
+    }
+    public void confirm(long id) {
+        Cafe cafe = getById(id);
+        cafe.setConfirmed(true);
+        repository.save(cafe);
     }
     public void delete(long id) {
         repository.deleteById(id);

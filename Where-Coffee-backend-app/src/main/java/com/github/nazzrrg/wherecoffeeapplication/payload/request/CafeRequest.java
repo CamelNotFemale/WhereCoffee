@@ -7,32 +7,26 @@ import java.util.List;
 
 @Data
 public class CafeRequest {
-    private Long id; // убрать
     private String name;
-    private String desc; // переименовать
+    private String description;
     private String location;
     private String address;
     private String url;
     private String phone;
-    private Double rating; // убрать
-    private String manager; // ???
+    private long managerId; // id?
     private List<Hours> workingHours;
-    private List<Integer> grades; // убрать
 
     @Override
     public String toString() {
         return "CafeRequest{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", desc='" + desc + '\'' +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
                 ", location='" + location + '\'' +
                 ", address='" + address + '\'' +
                 ", url='" + url + '\'' +
                 ", phone='" + phone + '\'' +
-                ", rating=" + rating +
-                ", manager='" + manager + '\'' +
+                ", manager='" + managerId + '\'' +
                 ", workingHours=" + workingHours +
-                ", grades=" + grades +
                 '}';
     }
 }
