@@ -31,23 +31,26 @@ public class CafeController {
     @PostMapping
     //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public void create(@RequestBody CafeRequest cafe) {
-        /** переделать с dto */
+        /** переделать с dto
+         * создаваемые кофейни с confirmed = false */
         System.out.println(cafe);
     }
 
     @GetMapping
     public List<Cafe> getCafePage(@RequestParam(value = "page") Integer page,
                                   @RequestParam(value = "location", defaultValue = "59.965361,30.311645") String location,
-                                  @RequestParam(value = "dist", defaultValue = "1.0") Double dist) {
+                                  @RequestParam(value = "dist", defaultValue = "1.0") Double dist,
+                                  @RequestParam(value = "confirmed", defaultValue = "true") boolean confirmed) {
         /** переделать с dto */
-        Page<Cafe> cafeterias = service.getPage(page, location, dist);
+        Page<Cafe> cafeterias = service.getPage(page, location, dist, confirmed);
         return cafeterias.getContent();
     }
 
     @GetMapping("/pages-count")
     public int getCountPage(@RequestParam(value = "location", defaultValue = "59.965361,30.311645") String location,
-                            @RequestParam(value = "dist", defaultValue = "1.0") Double dist) {
-        return service.getPageCount(location, dist);
+                            @RequestParam(value = "dist", defaultValue = "1.0") Double dist,
+                            @RequestParam(value = "confirmed", defaultValue = "true") boolean confirmed) {
+        return service.getPageCount(location, dist, confirmed);
     }
 
     @GetMapping("/{id}")

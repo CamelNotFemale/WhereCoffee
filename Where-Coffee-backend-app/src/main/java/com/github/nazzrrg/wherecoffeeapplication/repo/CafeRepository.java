@@ -29,4 +29,14 @@ public interface CafeRepository extends PagingAndSortingRepository<Cafe, Long> {
             "    )",
             nativeQuery = true)
     int countNearbyCoffeeShops(Double lat, Double lng, Double dist);
+    @Query(value =
+            "select * from cafeterias " +
+            "where confirmed = false",
+            nativeQuery = true)
+    Page<Cafe> findUnconfirmedCoffeeShops(Pageable pageable);
+    @Query(value =
+            "select count(*) from cafeterias " +
+            "where confirmed = false",
+            nativeQuery = true)
+    int countUnconfirmedCoffeeShops();
 }

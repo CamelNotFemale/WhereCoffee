@@ -47,19 +47,30 @@ public class CafeService {
         Pageable pageable = PageRequest.of(page, itemsOnPage);
         return repository.findAll(pageable);
     }
-    public int getPageCount(String location, Double dist) {
-        // точка центра поиска
-        Double lat = Double.parseDouble(location.split(",")[0]);
-        Double lng = Double.parseDouble(location.split(",")[1]);
-        int cafeCount = repository.countNearbyCoffeeShops(lat, lng, dist);
-        return (int)Math.ceil((double) cafeCount/itemsOnPage);
+    public int getPageCount(String location, Double dist, boolean confirmed) {
+        if (confirmed) {
+            // точка центра поиска
+            Double lat = Double.parseDouble(location.split(",")[0]);
+            Double lng = Double.parseDouble(location.split(",")[1]);
+            int cafeCount = repository.countNearbyCoffeeShops(lat, lng, dist);
+            return (int)Math.ceil((double) cafeCount/itemsOnPage);
+        }
+        else {
+            int cafeCount = repository.countUnconfirmedCoffeeShops();
+            return (int)Math.ceil((double) cafeCount/itemsOnPage);
+        }
     }
-    public Page<Cafe> getPage(int page, String location, Double dist) {
+    public Page<Cafe> getPage(int page, String location, Double dist, boolean confirmed) {
         Pageable pageable = PageRequest.of(page, itemsOnPage);
-        // точка центра поиска
-        Double lat = Double.parseDouble(location.split(",")[0]);
-        Double lng = Double.parseDouble(location.split(",")[1]);
-        return repository.findNearbyCoffeeShops(lat, lng, dist, pageable);
+        if (confirmed) {
+            // точка центра поиска
+            Double lat = Double.parseDouble(location.split(",")[0]);
+            Double lng = Double.parseDouble(location.split(",")[1]);
+            return repository.findNearbyCoffeeShops(lat, lng, dist, pageable);
+        }
+        else {
+            return repository.findUnconfirmedCoffeeShops(pageable);
+        }
     }
 
     public ResponseEntity<MessageResponse> addRewiew(Long id, User user, GradeRequest gradeRequest) {
