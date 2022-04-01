@@ -24,7 +24,7 @@ public class Grade {
             joinColumns = @JoinColumn(name = "grade_id"),
             inverseJoinColumns = @JoinColumn(name = "perk_id"))
     private Set<Perk> perks = new HashSet<>();;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
     private Date date;

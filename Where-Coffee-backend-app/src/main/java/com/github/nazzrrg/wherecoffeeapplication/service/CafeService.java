@@ -5,6 +5,7 @@ import com.github.nazzrrg.wherecoffeeapplication.payload.request.CafeRequest;
 import com.github.nazzrrg.wherecoffeeapplication.payload.request.GradeRequest;
 import com.github.nazzrrg.wherecoffeeapplication.payload.response.MessageResponse;
 import com.github.nazzrrg.wherecoffeeapplication.repo.CafeRepository;
+import com.github.nazzrrg.wherecoffeeapplication.repo.GradeRepository;
 import com.github.nazzrrg.wherecoffeeapplication.repo.PerkRepository;
 import com.github.nazzrrg.wherecoffeeapplication.utils.DTOMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,9 +13,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,11 +28,14 @@ public class CafeService {
     private int itemsOnPage;
     private final CafeRepository repository;
     private final PerkRepository perkRepository;
+    private final GradeRepository gradeRepository;
     private final DTOMapper mapper;
 
-    public CafeService(CafeRepository repository, PerkRepository perkRepository, DTOMapper mapper) {
+    public CafeService(CafeRepository repository, PerkRepository perkRepository,
+                       GradeRepository gradeRepository, DTOMapper mapper) {
         this.repository = repository;
         this.perkRepository = perkRepository;
+        this.gradeRepository = gradeRepository;
         this.mapper = mapper;
     }
     /** создание кофеен из API */
@@ -93,7 +99,7 @@ public class CafeService {
     }
 
     public ResponseEntity<MessageResponse> addRewiew(Long id, User user, GradeRequest gradeRequest) {
-        if (perkRepository.alreadyExistingComment(id, user.getId())) {
+        if (gradeRepository.alreadyExistingComment(id, user.getId())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: comment already left!"));
@@ -119,5 +125,33 @@ public class CafeService {
         return ResponseEntity
                 .created(URI.create("http://localhost/cafeterias/"+id))
                 .body(new MessageResponse("Grade added successfully"));
+    }
+    @PreAuthorize("#userId == authentication.principal.id")
+    public ResponseEntity<MessageResponse> updateRewiew(Long id, Long userId, GradeRequest gradeRequest) {
+        Grade grade = gradeRepository.findByUserAndCafeIds(id, userId);
+        Set<Perk> perks = new HashSet<>();
+        gradeRequest.getPerks().forEach(perkStr -> {
+            Perk perk = perkRepository.findByTitle(EPerk.valueOf(perkStr))
+                    .orElseThrow(() -> new RuntimeException("Error: perk is not found."));
+            perks.add(perk);
+        });
+        grade.setGrade(gradeRequest.getGrade());
+        grade.setComment(gradeRequest.getComment());
+        grade.setPerks(perks);
+        grade.setDate(new Date());
+
+        gradeRepository.save(grade);
+        return ResponseEntity
+                .ok()
+                .body(new MessageResponse("Grade updated successfully"));
+    }
+    @PreAuthorize("#userId == authentication.principal.id")
+    public ResponseEntity<MessageResponse> deleteRewiew(Long id, Long userId) {
+        Grade grade = gradeRepository.findByUserAndCafeIds(id, userId);
+        gradeRepository.deleteById(grade.getId());
+
+        return ResponseEntity
+                .ok()
+                .body(new MessageResponse("Grade deleted successfully"));
     }
 }

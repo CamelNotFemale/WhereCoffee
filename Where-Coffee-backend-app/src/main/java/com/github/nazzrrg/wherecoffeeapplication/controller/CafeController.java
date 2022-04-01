@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -83,6 +85,19 @@ public class CafeController {
                                                      @RequestBody GradeRequest grade) {
         User user = userService.getById(grade.getUserId());
         return service.addRewiew(id, user, grade);
+    }
+    @PatchMapping("/{id}/rewiew/{userId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<MessageResponse> updateRewiew(@PathVariable long id,
+                             @PathVariable long userId,
+                             @RequestBody GradeRequest grade) {
+        return service.updateRewiew(id, userId, grade);
+    }
+    @DeleteMapping("/{id}/rewiew/{userId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<MessageResponse> deleteRewiew(@PathVariable long id,
+                                                        @PathVariable long userId) {
+        return service.deleteRewiew(id, userId);
     }
 
     @PostMapping("/update")
