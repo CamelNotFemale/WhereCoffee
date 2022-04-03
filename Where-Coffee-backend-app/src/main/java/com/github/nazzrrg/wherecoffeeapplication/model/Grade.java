@@ -23,7 +23,7 @@ public class Grade {
     @JoinTable(	name = "grade_perks",
             joinColumns = @JoinColumn(name = "grade_id"),
             inverseJoinColumns = @JoinColumn(name = "perk_id"))
-    private Set<Perk> perks = new HashSet<>();;
+    private Set<Perk> perks = new HashSet<>();
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

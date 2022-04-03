@@ -1,11 +1,13 @@
 package com.github.nazzrrg.wherecoffeeapplication.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -25,7 +27,7 @@ public class Cafe {
     private String url;
     private String phone;
     private Double rating;
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager")
     private User manager;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -34,6 +36,12 @@ public class Cafe {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "cafeteria_id")
     private List<Grade> grades = new ArrayList<>();
+    @OneToMany(
+            mappedBy = "cafe",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<CafePerk> perks = new ArrayList<>();
     @JoinColumn(name="confirmed", columnDefinition = "boolean default false")
     private boolean confirmed;
 
@@ -50,6 +58,11 @@ public class Cafe {
         this.url = url;
         this.phone = phone;
         this.confirmed = false;
+    }
+
+    @JsonManagedReference
+    public List<CafePerk> getPerks() {
+        return perks;
     }
 
     @Override

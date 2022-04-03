@@ -15,17 +15,17 @@ public interface CafeRepository extends PagingAndSortingRepository<Cafe, Long> {
     boolean existsByIdApi(Long idApi);
     @Query(value =
             "select * from cafeterias " +
-            "where point_id in (" +
+            "where confirmed = true and point_id in (" +
             "        select id from points" +
-            "        where 111.2 * |/( (:lat - lat)^2 + ((:lng - lng)*cos(pi()*:lat/180))^2 ) <= :dist" +
+            "        where (111.2 * |/( (:lat - lat)^2 + ((:lng - lng)*cos(pi()*:lat/180))^2 ) <= :dist)" +
             "    )",
             nativeQuery = true)
     Page<Cafe> findNearbyCoffeeShops(Double lat, Double lng, Double dist, Pageable pageable);
     @Query(value =
             "select count(*) from cafeterias " +
-            "where point_id in (" +
+            "where confirmed = true and point_id in (" +
             "        select id from points" +
-            "        where 111.2 * |/( (:lat - lat)^2 + ((:lng - lng)*cos(pi()*:lat/180))^2 ) <= :dist" +
+            "        where (111.2 * |/( (:lat - lat)^2 + ((:lng - lng)*cos(pi()*:lat/180))^2 ) <= :dist)" +
             "    )",
             nativeQuery = true)
     int countNearbyCoffeeShops(Double lat, Double lng, Double dist);
