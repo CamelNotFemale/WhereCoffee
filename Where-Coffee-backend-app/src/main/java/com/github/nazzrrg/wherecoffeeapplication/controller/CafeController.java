@@ -87,14 +87,14 @@ public class CafeController {
         return service.addRewiew(id, user, grade);
     }
     @PatchMapping("/{id}/rewiew/{userId}")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_MODERATOR', 'ROLE_ADMIN')")
     public ResponseEntity<MessageResponse> updateRewiew(@PathVariable long id,
                              @PathVariable long userId,
                              @RequestBody GradeRequest grade) {
         return service.updateRewiew(id, userId, grade);
     }
     @DeleteMapping("/{id}/rewiew/{userId}")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_MODERATOR', 'ROLE_ADMIN')")
     public ResponseEntity<MessageResponse> deleteRewiew(@PathVariable long id,
                                                         @PathVariable long userId) {
         return service.deleteRewiew(id, userId);
