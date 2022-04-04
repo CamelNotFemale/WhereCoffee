@@ -8,6 +8,6 @@ import java.util.List;
 public class GradeRequest {
     private String comment;
     private int grade;
-    private Long userId;
+    //private Long userId; - не нужен, т.к. берётся из текущей сессии пользователя
     private List<String> perks;
 }

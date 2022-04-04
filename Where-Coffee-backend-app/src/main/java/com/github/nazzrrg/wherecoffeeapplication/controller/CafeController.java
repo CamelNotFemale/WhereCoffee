@@ -5,6 +5,7 @@ import com.github.nazzrrg.wherecoffeeapplication.model.User;
 import com.github.nazzrrg.wherecoffeeapplication.payload.request.CafeRequest;
 import com.github.nazzrrg.wherecoffeeapplication.payload.request.GradeRequest;
 import com.github.nazzrrg.wherecoffeeapplication.payload.response.MessageResponse;
+import com.github.nazzrrg.wherecoffeeapplication.security.services.UserDetailsImpl;
 import com.github.nazzrrg.wherecoffeeapplication.service.CafeService;
 import com.github.nazzrrg.wherecoffeeapplication.service.UserService;
 import com.github.nazzrrg.wherecoffeeapplication.service.YandexMapService;
@@ -81,23 +82,27 @@ public class CafeController {
     }
 
     @PostMapping("/{id}/rewiew")
-    public ResponseEntity<MessageResponse> addRewiew(@PathVariable long id,
+    public ResponseEntity<MessageResponse> addReview(Authentication auth,
+                                                     @PathVariable long id,
                                                      @RequestBody GradeRequest grade) {
-        User user = userService.getById(grade.getUserId());
-        return service.addRewiew(id, user, grade);
+        UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
+        User user = userService.getById(userDetails.getId());
+        return service.addReview(id, user, grade);
     }
-    @PatchMapping("/{id}/rewiew/{userId}")
+    @PatchMapping("/{id}/rewiew")
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_MODERATOR', 'ROLE_ADMIN')")
-    public ResponseEntity<MessageResponse> updateRewiew(@PathVariable long id,
-                             @PathVariable long userId,
-                             @RequestBody GradeRequest grade) {
-        return service.updateRewiew(id, userId, grade);
+    public ResponseEntity<MessageResponse> updateReview(Authentication auth,
+                                                        @PathVariable long id,
+                                                        @RequestBody GradeRequest grade) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
+        return service.updateReview(id, userDetails.getId(), grade);
     }
-    @DeleteMapping("/{id}/rewiew/{userId}")
+    @DeleteMapping("/{id}/rewiew")
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_MODERATOR', 'ROLE_ADMIN')")
-    public ResponseEntity<MessageResponse> deleteRewiew(@PathVariable long id,
-                                                        @PathVariable long userId) {
-        return service.deleteRewiew(id, userId);
+    public ResponseEntity<MessageResponse> deleteReview(Authentication auth,
+                                                        @PathVariable long id) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
+        return service.deleteReview(id, userDetails.getId());
     }
 
     @PostMapping("/update")

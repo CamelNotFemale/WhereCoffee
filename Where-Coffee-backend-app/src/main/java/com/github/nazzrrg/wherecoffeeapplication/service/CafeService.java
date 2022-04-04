@@ -98,7 +98,7 @@ public class CafeService {
         }
     }
 
-    public ResponseEntity<MessageResponse> addRewiew(Long id, User user, GradeRequest gradeRequest) {
+    public ResponseEntity<MessageResponse> addReview(Long id, User user, GradeRequest gradeRequest) {
         if (gradeRepository.alreadyExistingComment(id, user.getId())) {
             return ResponseEntity
                     .badRequest()
@@ -126,9 +126,15 @@ public class CafeService {
                 .created(URI.create("http://localhost/cafeterias/"+id))
                 .body(new MessageResponse("Grade added successfully"));
     }
-    @PreAuthorize("#userId == authentication.principal.id")
-    public ResponseEntity<MessageResponse> updateRewiew(Long id, Long userId, GradeRequest gradeRequest) {
+    //@PreAuthorize("#userId == authentication.principal.id")
+    public ResponseEntity<MessageResponse> updateReview(Long id, Long userId, GradeRequest gradeRequest) {
         Grade grade = gradeRepository.findByUserAndCafeIds(id, userId);
+        if (grade == null) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: you don't have a review!"));
+        }
+
         Set<Perk> perks = new HashSet<>();
         gradeRequest.getPerks().forEach(perkStr -> {
             Perk perk = perkRepository.findByTitle(EPerk.valueOf(perkStr))
@@ -145,9 +151,15 @@ public class CafeService {
                 .ok()
                 .body(new MessageResponse("Grade updated successfully"));
     }
-    @PreAuthorize("#userId == authentication.principal.id")
-    public ResponseEntity<MessageResponse> deleteRewiew(Long id, Long userId) {
+    //@PreAuthorize("#userId == authentication.principal.id")
+    public ResponseEntity<MessageResponse> deleteReview(Long id, Long userId) {
         Grade grade = gradeRepository.findByUserAndCafeIds(id, userId);
+        if (grade == null) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: you don't have a review!"));
+        }
+
         gradeRepository.deleteById(grade.getId());
 
         return ResponseEntity
