@@ -3,6 +3,7 @@ package com.github.nazzrrg.wherecoffeeapplication.repo;
 import com.github.nazzrrg.wherecoffeeapplication.model.Cafe;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface CafeRepository extends PagingAndSortingRepository<Cafe, Long> {
+public interface CafeRepository extends JpaRepository<Cafe, Long> {
     Optional<Cafe> findById(Long id);
     boolean existsByIdApi(Long idApi);
     @Query(value =

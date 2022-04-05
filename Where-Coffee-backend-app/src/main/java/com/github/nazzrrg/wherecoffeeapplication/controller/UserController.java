@@ -2,6 +2,7 @@ package com.github.nazzrrg.wherecoffeeapplication.controller;
 
 import com.github.nazzrrg.wherecoffeeapplication.model.User;
 import com.github.nazzrrg.wherecoffeeapplication.service.UserService;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,9 +26,11 @@ public class UserController {
 
     @GetMapping("/users")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
-    public List<User> getUsersByRole(@RequestParam(value = "role", defaultValue = "ROLE_USER") String role) {
-        /** добавить параметр username - для поиска и limit - количество совпадений */
-        return service.getUsersByRole(role);
+    public List<User> getUsers(@RequestParam(value = "page") Integer page,
+                                     @RequestParam(value = "name", defaultValue = "") String name,
+                                     @RequestParam(value = "role", defaultValue = "ROLE_USER") String role) {
+        Page<User> users = service.getPage(page, name, role);
+        return users.getContent();
     }
 
     @GetMapping("/users/{id}")
