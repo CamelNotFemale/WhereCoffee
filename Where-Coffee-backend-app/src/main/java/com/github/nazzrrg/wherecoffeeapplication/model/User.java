@@ -18,11 +18,11 @@ public class User {
     @Column(name = "Id")
     private long id;
     @Column(name = "Name")
-    private final String name;
+    private String name;
     @Column(name = "Email")
-    private final String email;
+    private String email;
     @Column(name = "Password")
-    private final String password;
+    private String password;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(	name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),

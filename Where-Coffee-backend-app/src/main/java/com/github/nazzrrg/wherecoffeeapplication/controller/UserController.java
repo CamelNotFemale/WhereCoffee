@@ -1,17 +1,24 @@
 package com.github.nazzrrg.wherecoffeeapplication.controller;
 
 import com.github.nazzrrg.wherecoffeeapplication.model.User;
+import com.github.nazzrrg.wherecoffeeapplication.payload.request.UserUpdateRequest;
+import com.github.nazzrrg.wherecoffeeapplication.payload.response.MessageResponse;
+import com.github.nazzrrg.wherecoffeeapplication.security.jwt.JwtUtils;
+import com.github.nazzrrg.wherecoffeeapplication.security.services.UserDetailsImpl;
 import com.github.nazzrrg.wherecoffeeapplication.service.UserService;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials = "true")
 public class UserController {
-
     private final UserService service;
 
     public UserController(UserService service) {
@@ -27,8 +34,8 @@ public class UserController {
     @GetMapping("/users")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     public List<User> getUsers(@RequestParam(value = "page") Integer page,
-                                     @RequestParam(value = "name", defaultValue = "") String name,
-                                     @RequestParam(value = "role", defaultValue = "ROLE_USER") String role) {
+                                 @RequestParam(value = "name", defaultValue = "") String name,
+                                 @RequestParam(value = "role", defaultValue = "ROLE_USER") String role) {
         Page<User> users = service.getPage(page, name, role);
         return users.getContent();
     }
@@ -38,8 +45,14 @@ public class UserController {
         return service.getById(id);
     }
 
+    @PatchMapping("/users/{id}")
+    @PreAuthorize("#id == authentication.principal.id")
+    public ResponseEntity<MessageResponse> update(@PathVariable long id,
+                                                  @RequestBody UserUpdateRequest user) {
+        return service.update(id, user);
+    }
     @DeleteMapping("/users/{id}")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void delete(@PathVariable long id) {
         service.delete(id);
     }
