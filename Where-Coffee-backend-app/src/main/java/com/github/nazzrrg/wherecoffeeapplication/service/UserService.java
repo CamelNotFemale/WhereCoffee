@@ -34,15 +34,15 @@ public class UserService {
     }
 
     public void create(@RequestBody User user) {
-        if (repository.existsByName(user.getName())) {
+        if (repository.existsByUsername(user.getUsername())) {
             repository.save(user);
         }
         else new RuntimeException("Error: username is taken!");
     }
 
-    public Page<User> getPage(Integer page, String name, String role) {
+    public Page<User> getPage(Integer page, String username, String role) {
         Pageable pageable = PageRequest.of(page, itemsOnPage);
-        return repository.findUserByNameAndRole(name, role, pageable);
+        return repository.findUserByUsernameAndRole(username, role, pageable);
     }
 
     public User getById(long id) {
@@ -50,15 +50,13 @@ public class UserService {
     }
     public ResponseEntity<MessageResponse> update(long id, UserUpdateRequest userRequest) {
         User userToBeUpdated = getById(id);
-        if (!userToBeUpdated.getName().equals(userRequest.getName())
-                && repository.existsByName(userRequest.getName())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: username is taken!"));
-        }
-        // /** при изменении имени возвращать новый JWT токен! Пока изменение имени запрещено */
-        // userToBeUpdated.setName(userRequest.getName());
+
+        userToBeUpdated.setFirstName(userRequest.getFirstName());;
+        userToBeUpdated.setSurname(userRequest.getSurname());
+        userToBeUpdated.setPatronymic(userRequest.getPatronymic());
+        userToBeUpdated.setBirthDay(userRequest.getBirthDay());
         userToBeUpdated.setEmail(userRequest.getEmail());
+        userToBeUpdated.setPhone(userRequest.getPhone());
         if (userRequest.getNewPassword() != null) {
             if (!encoder.matches(userRequest.getOldPassword(), userToBeUpdated.getPassword())) {
                 return ResponseEntity

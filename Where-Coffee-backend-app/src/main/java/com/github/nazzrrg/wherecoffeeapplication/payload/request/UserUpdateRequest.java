@@ -5,10 +5,12 @@ import lombok.Data;
 import java.util.Date;
 @Data
 public class UserUpdateRequest {
-    private String name;
+    private String firstName;
+    private String surname;
+    private String patronymic;
+    private Date birthDay;
     private String email;
     private String phone;
-    private Date birthDay;
     private String oldPassword;
     private String newPassword;
 }

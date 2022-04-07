@@ -12,7 +12,7 @@ databaseChangeLog:
                   name: id
                   value: "1"
               - column:
-                  name: name
+                  name: username
                   value: "John"
               - column:
                   name: email
@@ -24,7 +24,7 @@ databaseChangeLog:
                   name: id
                   value: "2"
               - column:
-                  name: name
+                  name: username
                   value: "Julie"
               - column:
                   name: email
@@ -36,7 +36,7 @@ databaseChangeLog:
                   name: id
                   value: "3"
               - column:
-                  name: name
+                  name: username
                   value: "Jennifer"
               - column:
                   name: email
@@ -48,7 +48,7 @@ databaseChangeLog:
                   name: id
                   value: "4"
               - column:
-                  name: name
+                  name: username
                   value: "Helen"
               - column:
                   name: email
@@ -60,7 +60,7 @@ databaseChangeLog:
                   name: id
                   value: "5"
               - column:
-                  name: name
+                  name: username
                   value: "Rachel"
               - column:
                   name: email

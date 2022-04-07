@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,16 +13,19 @@ import java.util.Set;
 @Data
 @Table(name = "users")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "Id")
     private long id;
-    @Column(name = "Name")
-    private String name;
-    @Column(name = "Email")
+    @Column(name = "username")
+    private String username;
+    @Column(name = "first_name")
+    private String firstName;
+    private String surname;
+    private String patronymic;
+    @Column(name = "birth_day")
+    private Date birthDay;
     private String email;
-    @Column(name = "Password")
+    private String phone;
     private String password;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(	name = "user_roles",
@@ -30,12 +34,23 @@ public class User {
     private Set<Role> roles = new HashSet<>();
 
     public User() {
-        name = email = password = "";
+        username = firstName = surname = patronymic = email = phone = password = "";
     }
 
-    public User(String name, String email, String password) {
-        this.name = name;
+    public User(String username, String email, String password) {
+        this.username = username;
         this.email = email;
+        this.password = password;
+    }
+
+    public User(String username, String firstName, String surname, String patronymic, Date birthDay, String email, String phone, String password) {
+        this.username = username;
+        this.firstName = firstName;
+        this.surname = surname;
+        this.patronymic = patronymic;
+        this.birthDay = birthDay;
+        this.email = email;
+        this.phone = phone;
         this.password = password;
     }
 }

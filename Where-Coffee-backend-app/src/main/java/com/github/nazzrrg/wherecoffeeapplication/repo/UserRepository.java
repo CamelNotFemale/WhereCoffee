@@ -12,16 +12,16 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByName(String name);
-    Boolean existsByName(String name);
+    Optional<User> findByUsername(String username);
+    Boolean existsByUsername(String username);
     Boolean existsByEmail(String email);
     @Query(value =
             "select * from users" +
-            "    where name like concat('%',:name,'%') and id in (" +
+            "    where username like concat('%',:username,'%') and id in (" +
             "           select user_id from user_roles" +
             "           join roles r on r.id = user_roles.role_id" +
             "           where name = :role" +
             "       )",
             nativeQuery = true)
-    Page<User> findUserByNameAndRole(String name, String role, Pageable pageable);
+    Page<User> findUserByUsernameAndRole(String username, String role, Pageable pageable);
 }
