@@ -4,8 +4,10 @@ import com.github.nazzrrg.wherecoffeeapplication.model.*;
 import com.github.nazzrrg.wherecoffeeapplication.payload.request.CafeRequest;
 import com.github.nazzrrg.wherecoffeeapplication.payload.request.GradeRequest;
 import com.github.nazzrrg.wherecoffeeapplication.payload.response.MessageResponse;
+import com.github.nazzrrg.wherecoffeeapplication.payload.response.OwnershipClaimResponse;
 import com.github.nazzrrg.wherecoffeeapplication.repo.CafeRepository;
 import com.github.nazzrrg.wherecoffeeapplication.repo.GradeRepository;
+import com.github.nazzrrg.wherecoffeeapplication.repo.OwnershipRepository;
 import com.github.nazzrrg.wherecoffeeapplication.repo.PerkRepository;
 import com.github.nazzrrg.wherecoffeeapplication.utils.DTOMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,10 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class CafeService {
@@ -29,13 +28,16 @@ public class CafeService {
     private final CafeRepository repository;
     private final PerkRepository perkRepository;
     private final GradeRepository gradeRepository;
+    private final OwnershipRepository ownershipRepository;
     private final DTOMapper mapper;
 
     public CafeService(CafeRepository repository, PerkRepository perkRepository,
-                       GradeRepository gradeRepository, DTOMapper mapper) {
+                       GradeRepository gradeRepository, OwnershipRepository ownershipRepository,
+                       DTOMapper mapper) {
         this.repository = repository;
         this.perkRepository = perkRepository;
         this.gradeRepository = gradeRepository;
+        this.ownershipRepository = ownershipRepository;
         this.mapper = mapper;
     }
     /** создание кофеен из API */
@@ -59,13 +61,44 @@ public class CafeService {
         cafeToBeUpdated = mapper.fillCafeFromDTO(cafeToBeUpdated, cafeRequest);
         repository.save(cafeToBeUpdated);
     }
-    public void confirm(long id) {
+    public void delete(long id) {
+        repository.deleteById(id);
+    }
+
+    public void addDesireToOwn(long id, User user, String messengerLogin) {
+        OwnershipClaim claim = new OwnershipClaim(getById(id), user, messengerLogin);
+        ownershipRepository.save(claim);
+    }
+    public ResponseEntity<List<OwnershipClaimResponse>> getClaimsPage(int page) {
+        Pageable pageable = PageRequest.of(page, itemsOnPage);
+        Page<OwnershipClaim> claims = ownershipRepository.findAll(pageable);
+
+        List<OwnershipClaimResponse> claimsResponse = new ArrayList<>();
+        claims.getContent().forEach((e) -> claimsResponse.add(
+                new OwnershipClaimResponse(
+                        e.getId(),e.getCafe().getId(), e.getUser().getId(), e.getMessengerLogin())
+        ));
+        return ResponseEntity
+                .ok()
+                .body(claimsResponse);
+    }
+    public void rejectOwnership(long id) {
+        ownershipRepository.deleteById(id);
+    }
+    public long confirmOwnership(long id) {
+        OwnershipClaim claim = ownershipRepository.findById(id).orElseThrow(RuntimeException::new);
+        Cafe cafe = claim.getCafe();
+        User user = claim.getUser();
+        cafe.setManager(user);
+        repository.save(cafe);
+        ownershipRepository.delete(claim);
+
+        return user.getId();
+    }
+    public void confirmCafe(long id) {
         Cafe cafe = getById(id);
         cafe.setConfirmed(true);
         repository.save(cafe);
-    }
-    public void delete(long id) {
-        repository.deleteById(id);
     }
 
     public Page<Cafe> getPage(int page) {

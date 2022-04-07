@@ -2,8 +2,10 @@ package com.github.nazzrrg.wherecoffeeapplication.service;
 
 import com.github.nazzrrg.wherecoffeeapplication.model.Cafe;
 import com.github.nazzrrg.wherecoffeeapplication.model.ERole;
+import com.github.nazzrrg.wherecoffeeapplication.model.Role;
 import com.github.nazzrrg.wherecoffeeapplication.payload.request.UserUpdateRequest;
 import com.github.nazzrrg.wherecoffeeapplication.payload.response.MessageResponse;
+import com.github.nazzrrg.wherecoffeeapplication.repo.RoleRepository;
 import com.github.nazzrrg.wherecoffeeapplication.repo.UserRepository;
 import com.github.nazzrrg.wherecoffeeapplication.model.User;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,17 +21,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserService {
     @Value("${netcracker.app.itemsOnPage}")
     private int itemsOnPage;
     private final UserRepository repository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder encoder;
 
-    public UserService(UserRepository repository, PasswordEncoder encoder) {
+    public UserService(UserRepository repository, RoleRepository roleRepository, PasswordEncoder encoder) {
         this.repository = repository;
+        this.roleRepository = roleRepository;
         this.encoder = encoder;
     }
 
@@ -73,5 +79,23 @@ public class UserService {
     }
     public void delete(long id) {
         repository.deleteById(id);
+    }
+    public void giveModeratorRights(long id) {
+        User user = getById(id);
+        if (!user.getRoles().contains(ERole.valueOf("ROLE_MODERATOR"))) {
+            Set<Role> roles = new HashSet<>();
+            roles.add(roleRepository.findByName(ERole.valueOf("ROLE_MODERATOR")).orElseThrow());
+            user.setRoles(roles);
+            repository.save(user);
+        }
+    }
+    public void giveAdminRights(long id) {
+        User user = getById(id);
+        if (!user.getRoles().contains(ERole.valueOf("ROLE_ADMIN"))) {
+            Set<Role> roles = new HashSet<>();
+            roles.add(roleRepository.findByName(ERole.valueOf("ROLE_ADMIN")).orElseThrow());
+            user.setRoles(roles);
+            repository.save(user);
+        }
     }
 }
