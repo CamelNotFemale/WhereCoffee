@@ -29,10 +29,6 @@ public class Point {
 
     @Override
     public String toString() {
-        return "Point{" +
-                "id=" + id +
-                ", lat=" + lat +
-                ", lng=" + lng +
-                '}';
+        return lat+","+lng;
     }
 }

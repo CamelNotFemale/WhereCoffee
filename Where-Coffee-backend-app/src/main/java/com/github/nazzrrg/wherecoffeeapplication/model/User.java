@@ -1,5 +1,6 @@
 package com.github.nazzrrg.wherecoffeeapplication.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
@@ -26,6 +27,7 @@ public class User {
     private Date birthDay;
     private String email;
     private String phone;
+    @JsonIgnore
     private String password;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(	name = "user_roles",

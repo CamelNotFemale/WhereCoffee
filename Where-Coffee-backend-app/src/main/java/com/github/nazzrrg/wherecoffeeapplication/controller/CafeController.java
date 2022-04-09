@@ -2,10 +2,12 @@ package com.github.nazzrrg.wherecoffeeapplication.controller;
 
 import com.github.nazzrrg.wherecoffeeapplication.model.Cafe;
 import com.github.nazzrrg.wherecoffeeapplication.model.OwnershipClaim;
+import com.github.nazzrrg.wherecoffeeapplication.model.Promotion;
 import com.github.nazzrrg.wherecoffeeapplication.model.User;
 import com.github.nazzrrg.wherecoffeeapplication.payload.request.CafeRequest;
 import com.github.nazzrrg.wherecoffeeapplication.payload.request.GradeRequest;
 import com.github.nazzrrg.wherecoffeeapplication.payload.request.OwnershipRequest;
+import com.github.nazzrrg.wherecoffeeapplication.payload.request.PromotionRequest;
 import com.github.nazzrrg.wherecoffeeapplication.payload.response.MessageResponse;
 import com.github.nazzrrg.wherecoffeeapplication.payload.response.OwnershipClaimResponse;
 import com.github.nazzrrg.wherecoffeeapplication.security.services.UserDetailsImpl;
@@ -82,6 +84,7 @@ public class CafeController {
     }
 
     @PostMapping("/{id}/desire-to-own")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER')")
     public void desireToOwn(Authentication auth,
                             @PathVariable long id,
                             @RequestBody OwnershipRequest ownershipRequest) {

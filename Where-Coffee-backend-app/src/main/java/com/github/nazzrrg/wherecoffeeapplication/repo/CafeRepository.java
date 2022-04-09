@@ -40,4 +40,12 @@ public interface CafeRepository extends JpaRepository<Cafe, Long> {
             "where confirmed = false",
             nativeQuery = true)
     int countUnconfirmedCoffeeShops();
+    /*@Query(value =
+            "select " +
+            "    case when count(*) > 0 then 'TRUE' else 'FALSE' end as is_manager " +
+            "from cafeterias " +
+            "where id = :cafeId AND manager = :userId " +
+            "limit 1",
+            nativeQuery = true)
+    boolean isACafeteriaManager(Long cafeId, Long userId);*/
 }

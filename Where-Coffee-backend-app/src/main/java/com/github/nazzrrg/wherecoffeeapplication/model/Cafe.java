@@ -1,5 +1,6 @@
 package com.github.nazzrrg.wherecoffeeapplication.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
@@ -17,6 +18,7 @@ public class Cafe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @JoinColumn(name="id_api", unique = true)
+    @JsonIgnore
     private Long idApi;
     private String name;
     private String description;
@@ -42,6 +44,11 @@ public class Cafe {
             orphanRemoval = true
     )
     private List<CafePerk> perks = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(	name = "cafeterias_promotions",
+            joinColumns = @JoinColumn(name = "cafeteria_id"),
+            inverseJoinColumns = @JoinColumn(name = "promotion_id"))
+    private List<Promotion> promotions = new ArrayList<>();
     @JoinColumn(name="confirmed", columnDefinition = "boolean default false")
     private boolean confirmed;
 
