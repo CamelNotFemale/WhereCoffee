@@ -1,5 +1,6 @@
 package com.github.nazzrrg.wherecoffeeapplication.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.github.nazzrrg.wherecoffeeapplication.utils.CustomCafeSerializer;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class Promotion {
     private Date toDate;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(

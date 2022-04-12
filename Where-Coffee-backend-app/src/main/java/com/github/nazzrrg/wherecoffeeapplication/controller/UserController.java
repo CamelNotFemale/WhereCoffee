@@ -47,8 +47,8 @@ public class UserController {
 
     @PatchMapping("/users/{id}")
     @PreAuthorize("#id == authentication.principal.id")
-    public ResponseEntity<MessageResponse> update(@PathVariable long id,
-                                                  @RequestBody UserUpdateRequest user) {
+    public User update(@PathVariable long id,
+                       @RequestBody UserUpdateRequest user) {
         return service.update(id, user);
     }
     @DeleteMapping("/users/{id}")

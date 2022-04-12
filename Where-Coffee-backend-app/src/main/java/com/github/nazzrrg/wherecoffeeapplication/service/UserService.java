@@ -12,13 +12,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -54,7 +57,8 @@ public class UserService {
     public User getById(long id) {
         return repository.findById(id).orElseThrow(RuntimeException::new);
     }
-    public ResponseEntity<MessageResponse> update(long id, UserUpdateRequest userRequest) {
+    @Transactional
+    public User update(long id, UserUpdateRequest userRequest) {
         User userToBeUpdated = getById(id);
 
         userToBeUpdated.setFirstName(userRequest.getFirstName());;
@@ -63,19 +67,16 @@ public class UserService {
         userToBeUpdated.setBirthDay(userRequest.getBirthDay());
         userToBeUpdated.setEmail(userRequest.getEmail());
         userToBeUpdated.setPhone(userRequest.getPhone());
-        if (userRequest.getNewPassword() != null) {
+        if (userRequest.getNewPassword() != null && userRequest.getNewPassword().length() > 0) {
             if (!encoder.matches(userRequest.getOldPassword(), userToBeUpdated.getPassword())) {
-                return ResponseEntity
-                        .badRequest()
-                        .body(new MessageResponse("Error: old password is incorrect!"));
+                throw new ResponseStatusException(
+                        HttpStatus.CONFLICT, "Old password is incorrect!"
+                );
             }
             userToBeUpdated.setPassword(encoder.encode(userRequest.getNewPassword()));
         }
-        repository.save(userToBeUpdated);
 
-        return ResponseEntity
-                .ok()
-                .body(new MessageResponse("Profile information updated successfully!"));
+        return repository.save(userToBeUpdated);
     }
     public void delete(long id) {
         repository.deleteById(id);

@@ -27,6 +27,9 @@ public class PromotionService {
         this.repository = repository;
         this.promotionRepository = promotionRepository;
     }
+    public Promotion getPromotion(long id) {
+        return promotionRepository.findById(id).orElseThrow(RuntimeException::new);
+    }
     public Page<Promotion> getPage(User user, int page) {
         Pageable pageable = PageRequest.of(page, itemsOnPage);
         Page<Promotion> promotions = promotionRepository.findAllByUser(user, pageable);
