@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface PromotionRepository extends JpaRepository<Promotion, Long> {
     @Modifying
@@ -15,4 +16,17 @@ public interface PromotionRepository extends JpaRepository<Promotion, Long> {
             "where promotion_id = :promoId", nativeQuery = true)
     int deletePromotionLinksByPromoId(Long promoId);
     Page<Promotion> findAllByUser(User user, Pageable pageable);
+
+    @Modifying
+    @Transactional
+    @Query(value =
+            "set TIMEZONE = 'Europe/Moscow'; " +
+            "delete from cafeterias_promotions " +
+            "where promotion_id = ( " +
+            "        select id from promotions " +
+            "        where to_date < NOW() " +
+            "    ); " +
+            "delete from promotions " +
+            "where to_date < NOW();", nativeQuery = true)
+    int deleteIrrelevantPromotions();
 }

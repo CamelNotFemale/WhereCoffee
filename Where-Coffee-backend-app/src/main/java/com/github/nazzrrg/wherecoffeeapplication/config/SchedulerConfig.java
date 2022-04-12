@@ -1,6 +1,8 @@
 package com.github.nazzrrg.wherecoffeeapplication.config;
 
 import com.github.nazzrrg.wherecoffeeapplication.controller.CafeController;
+import com.github.nazzrrg.wherecoffeeapplication.repo.PromotionRepository;
+import com.github.nazzrrg.wherecoffeeapplication.service.YandexMapService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -17,14 +19,21 @@ public class SchedulerConfig {
     private String urlPattern;
     @Value("${netcracker.app.mapAPI}")
     private String apikey;
-    private final CafeController cafeController;
+    private final YandexMapService mapService;
+    private final PromotionRepository promotionRepository;
 
-    public SchedulerConfig(CafeController cafeController) {
-        this.cafeController = cafeController;
+    public SchedulerConfig(YandexMapService mapService, PromotionRepository promotionRepository) {
+        this.mapService = mapService;
+        this.promotionRepository = promotionRepository;
     }
 
     @Scheduled(cron = "0 0 3 * * *") // everyday in 3 a.m.
     private void updateCoffeeSpotsFromAPI() {
-        cafeController.updateCafeterias(results, areas, urlPattern, apikey);
+        mapService.updateCafeterias(results, areas, urlPattern, apikey);
+    }
+
+    @Scheduled(cron = "0 0 2 * * *") // everyday in 2 a.m.
+    private void deleteIrrelevantPromotions() {
+        promotionRepository.deleteIrrelevantPromotions();
     }
 }
