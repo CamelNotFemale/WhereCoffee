@@ -116,6 +116,7 @@ public class CafeController {
     }
 
     @PostMapping("/{id}/review")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER')")
     public ResponseEntity<MessageResponse> addReview(Authentication auth,
                                                      @PathVariable long id,
                                                      @RequestBody GradeRequest grade) {
@@ -123,23 +124,22 @@ public class CafeController {
         User user = userService.getById(userDetails.getId());
         return service.addReview(id, user, grade);
     }
-    @PatchMapping("/{id}/review")
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_MODERATOR', 'ROLE_ADMIN')")
-    public ResponseEntity<MessageResponse> updateReview(Authentication auth,
-                                                        @PathVariable long id,
+    @PatchMapping("/{id}/review/{userId}")
+    @PreAuthorize("#userId == authentication.principal.id or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<MessageResponse> updateReview(@PathVariable long id,
+                                                        @PathVariable long userId,
                                                         @RequestBody GradeRequest grade) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
-        return service.updateReview(id, userDetails.getId(), grade);
+        return service.updateReview(id, userId, grade);
     }
-    @DeleteMapping("/{id}/review")
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_MODERATOR', 'ROLE_ADMIN')")
-    public ResponseEntity<MessageResponse> deleteReview(Authentication auth,
-                                                        @PathVariable long id) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
-        return service.deleteReview(id, userDetails.getId());
+    @DeleteMapping("/{id}/review/{userId}")
+    @PreAuthorize("#userId == authentication.principal.id or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<MessageResponse> deleteReview(@PathVariable long id,
+                                                        @PathVariable long userId) {
+        return service.deleteReview(id, userId);
     }
 
     @PostMapping("/update")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<MessageResponse> updateCafeterias(@RequestParam(value = "res",defaultValue = "1") Integer res,
                                                             @Value("${netcracker.app.areas}") String areas,
                                                             @Value("${netcracker.app.updateURL}") String urlPattern,

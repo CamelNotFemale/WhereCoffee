@@ -157,7 +157,6 @@ public class CafeService {
                 .created(URI.create("http://localhost/cafeterias/"+id))
                 .body(new MessageResponse("Grade added successfully"));
     }
-    //@PreAuthorize("#userId == authentication.principal.id")
     public ResponseEntity<MessageResponse> updateReview(Long id, Long userId, GradeRequest gradeRequest) {
         Grade grade = gradeRepository.findByUserAndCafeIds(id, userId);
         if (grade == null) {
@@ -182,7 +181,6 @@ public class CafeService {
                 .ok()
                 .body(new MessageResponse("Grade updated successfully"));
     }
-    //@PreAuthorize("#userId == authentication.principal.id")
     public ResponseEntity<MessageResponse> deleteReview(Long id, Long userId) {
         Grade grade = gradeRepository.findByUserAndCafeIds(id, userId);
         if (grade == null) {

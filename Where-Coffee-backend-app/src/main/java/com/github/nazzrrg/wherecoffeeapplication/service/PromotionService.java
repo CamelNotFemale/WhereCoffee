@@ -6,6 +6,7 @@ import com.github.nazzrrg.wherecoffeeapplication.model.User;
 import com.github.nazzrrg.wherecoffeeapplication.payload.request.PromotionRequest;
 import com.github.nazzrrg.wherecoffeeapplication.payload.response.MessageResponse;
 import com.github.nazzrrg.wherecoffeeapplication.repo.*;
+import com.github.nazzrrg.wherecoffeeapplication.security.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,8 +33,7 @@ public class PromotionService {
     }
     public Page<Promotion> getPage(User user, int page) {
         Pageable pageable = PageRequest.of(page, itemsOnPage);
-        Page<Promotion> promotions = promotionRepository.findAllByUser(user, pageable);
-        return promotions;
+        return promotionRepository.findAllByUser(user, pageable);
     }
     @Transactional
     public ResponseEntity<MessageResponse> createPromotion(User user, PromotionRequest promoReq) {
@@ -45,7 +45,7 @@ public class PromotionService {
         Promotion promoEntity = promotionRepository.save(promo);
         for (long id: promoReq.getCafeteriaIds()) {
             Cafe cafe = repository.findById(id).orElseThrow();
-            if (cafe.getManager() != null && cafe.getManager().getId() == user.getId()) {
+            if (user.isAdmin() || cafe.getManager() != null && cafe.getManager().getId() == user.getId()) {
                 cafe.getPromotions().add(promoEntity);
                 repository.save(cafe);
             }
@@ -62,9 +62,9 @@ public class PromotionService {
                 .body(new MessageResponse("Promotion successfully created!"));
     }
     @Transactional
-    public ResponseEntity<MessageResponse> updatePromotion(Long promoId, Long userId, PromotionRequest promoReq) {
+    public ResponseEntity<MessageResponse> updatePromotion(Long promoId, UserDetailsImpl userDetails, PromotionRequest promoReq) {
         Promotion promo = promotionRepository.getById(promoId);
-        if (promo.getUser().getId() == userId) {
+        if (userDetails.isAdmin() || promo.getUser().getId() == userDetails.getId()) {
             promotionRepository.deletePromotionLinksByPromoId(promoId);
             promo.setTitle(promoReq.getTitle());
             promo.setDescription(promoReq.getDescription());
@@ -72,7 +72,7 @@ public class PromotionService {
             promo.setToDate(promoReq.getTo());
             for (long id: promoReq.getCafeteriaIds()) {
                 Cafe cafe = repository.findById(id).orElseThrow();
-                if (cafe.getManager() != null && cafe.getManager().getId() == userId) {
+                if (userDetails.isAdmin() || cafe.getManager() != null && cafe.getManager().getId() == userDetails.getId()) {
                     cafe.getPromotions().add(promo);
                     repository.save(cafe);
                 }
@@ -96,9 +96,9 @@ public class PromotionService {
         }
     }
     @Transactional
-    public ResponseEntity<MessageResponse> deletePromotion(Long promoId, Long userId) {
+    public ResponseEntity<MessageResponse> deletePromotion(Long promoId, UserDetailsImpl userDetails) {
         Promotion promo = promotionRepository.getById(promoId);
-        if (promo.getUser().getId() == userId) {
+        if (userDetails.isAdmin() || promo.getUser().getId() == userDetails.getId()) {
             promotionRepository.deletePromotionLinksByPromoId(promoId);
             promotionRepository.delete(promo);
             return ResponseEntity

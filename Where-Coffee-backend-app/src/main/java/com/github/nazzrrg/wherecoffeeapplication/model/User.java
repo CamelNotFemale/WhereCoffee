@@ -55,4 +55,35 @@ public class User {
         this.phone = phone;
         this.password = password;
     }
+
+    public boolean isAdmin() {
+        boolean isAdmin = false;
+        for (Role role: roles) {
+            if (role.getName().equals(ERole.ROLE_ADMIN)) {
+                isAdmin = true;
+                break;
+            }
+        }
+        return isAdmin;
+    }
+    public boolean isModerator() {
+        boolean isModerator = false;
+        for (Role role: roles) {
+            if (role.getName().equals(ERole.ROLE_MODERATOR)) {
+                isModerator = true;
+                break;
+            }
+        }
+        return isModerator;
+    }
+    public boolean isUser() {
+        boolean isUser = false;
+        for (Role role: roles) {
+            if (role.getName().equals(ERole.ROLE_USER)) {
+                isUser = true;
+                break;
+            }
+        }
+        return isUser;
+    }
 }

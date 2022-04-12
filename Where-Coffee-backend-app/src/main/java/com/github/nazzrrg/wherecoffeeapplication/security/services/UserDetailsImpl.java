@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.github.nazzrrg.wherecoffeeapplication.model.ERole;
 import com.github.nazzrrg.wherecoffeeapplication.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -80,5 +81,23 @@ public class UserDetailsImpl implements UserDetails {
             return false;
         UserDetailsImpl user = (UserDetailsImpl) o;
         return Objects.equals(id, user.id);
+    }
+    public boolean isAdmin() {
+        if (authorities.contains(new SimpleGrantedAuthority(ERole.ROLE_ADMIN.name()))) {
+            return true;
+        }
+        return false;
+    }
+    public boolean isModerator() {
+        if (authorities.contains(new SimpleGrantedAuthority(ERole.ROLE_MODERATOR.name()))) {
+            return true;
+        }
+        return false;
+    }
+    public boolean isUser() {
+        if (authorities.contains(new SimpleGrantedAuthority(ERole.ROLE_USER.name()))) {
+            return true;
+        }
+        return false;
     }
 }

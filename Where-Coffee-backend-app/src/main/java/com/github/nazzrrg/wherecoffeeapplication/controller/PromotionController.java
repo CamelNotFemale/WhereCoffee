@@ -26,6 +26,11 @@ public class PromotionController {
         this.userService = userService;
         this.service = service;
     }
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_MODERATOR', 'ROLE_ADMIN')")
+    public Promotion getPromotion(@PathVariable long id) {
+        return service.getPromotion(id);
+    }
     @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_MODERATOR', 'ROLE_ADMIN')")
     public List<Promotion> getPromotions(Authentication auth,
@@ -49,13 +54,13 @@ public class PromotionController {
                                 @PathVariable long id,
                                 @RequestBody PromotionRequest promoReq) {
         UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
-        return service.updatePromotion(id, userDetails.getId(), promoReq);
+        return service.updatePromotion(id, userDetails, promoReq);
     }
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_MODERATOR', 'ROLE_ADMIN')")
     public ResponseEntity<MessageResponse> deletePromotion(Authentication auth,
                                 @PathVariable long id) {
         UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
-        return service.deletePromotion(id, userDetails.getId());
+        return service.deletePromotion(id, userDetails);
     }
 }
