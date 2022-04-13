@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
 import java.util.*;
@@ -64,6 +66,11 @@ public class CafeService {
     }
 
     public void addDesireToOwn(long id, User user, String messengerLogin) {
+        if (ownershipRepository.existsByCafeAndUserIds(id, user.getId())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, "Claim has already been sent!"
+            );
+        }
         OwnershipClaim claim = new OwnershipClaim(getById(id), user, messengerLogin);
         ownershipRepository.save(claim);
     }
