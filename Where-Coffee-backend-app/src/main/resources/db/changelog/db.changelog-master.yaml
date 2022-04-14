@@ -9,9 +9,6 @@ databaseChangeLog:
             tableName: users
             columns:
               - column:
-                  name: id
-                  value: "1"
-              - column:
                   name: username
                   value: "John"
               - column:
@@ -20,9 +17,6 @@ databaseChangeLog:
         - insert:
             tableName: users
             columns:
-              - column:
-                  name: id
-                  value: "2"
               - column:
                   name: username
                   value: "Julie"
@@ -33,9 +27,6 @@ databaseChangeLog:
             tableName: users
             columns:
               - column:
-                  name: id
-                  value: "3"
-              - column:
                   name: username
                   value: "Jennifer"
               - column:
@@ -45,9 +36,6 @@ databaseChangeLog:
             tableName: users
             columns:
               - column:
-                  name: id
-                  value: "4"
-              - column:
                   name: username
                   value: "Helen"
               - column:
@@ -56,9 +44,6 @@ databaseChangeLog:
         - insert:
             tableName: users
             columns:
-              - column:
-                  name: id
-                  value: "5"
               - column:
                   name: username
                   value: "Rachel"
@@ -74,17 +59,11 @@ databaseChangeLog:
             tableName: roles
             columns:
               - column:
-                  name: id
-                  value: "1"
-              - column:
                   name: name
                   value: "ROLE_USER"
         - insert:
             tableName: roles
             columns:
-              - column:
-                  name: id
-                  value: "2"
               - column:
                   name: name
                   value: "ROLE_MODERATOR"
@@ -92,13 +71,43 @@ databaseChangeLog:
             tableName: roles
             columns:
               - column:
-                  name: id
-                  value: "3"
-              - column:
                   name: name
                   value: "ROLE_ADMIN"
+
   - changeSet:
       id: 3
+      author: java
+      comment: "create admin record"
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: "admin"
+              - column:
+                  name: email
+                  value: "admin@admin.com"
+              - column:
+                  name: password
+                  value: "$2a$10$l6ZOGRkCJhgAqCSSl2gEoOehXONlHNfZRlHCj288fx4KqDwGByAFi"
+
+  - changeSet:
+      id: 4
+      author: java
+      comment: "create admin record"
+      changes:
+        - insert:
+            tableName: user_roles
+            columns:
+              - column:
+                  name: user_id
+                  valueComputed: "(SELECT id FROM users WHERE username='admin')"
+              - column:
+                  name: role_id
+                  valueComputed: "(SELECT id FROM roles WHERE name='ROLE_ADMIN')"
+  - changeSet:
+      id: 5
       author: postgres
       comment: "init perks"
       changes:
@@ -129,3 +138,35 @@ databaseChangeLog:
               - column:
                   name: title
                   value: "STREET_TERRACE"
+  - changeSet:
+      id: 6
+      author: java
+      comment: "create moderator record"
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: "mod"
+              - column:
+                  name: email
+                  value: "mod@mod.com"
+              - column:
+                  name: password
+                  value: "$2a$10$/lCSFzbZMBBrSqWPDqa2.ORnuXxGQSpLlkmKFaG6zbk.j13jHfxRe"
+
+  - changeSet:
+      id: 7
+      author: java
+      comment: "create moderator record"
+      changes:
+        - insert:
+            tableName: user_roles
+            columns:
+              - column:
+                  name: user_id
+                  valueComputed: "(SELECT id FROM users WHERE username='mod')"
+              - column:
+                  name: role_id
+                  valueComputed: "(SELECT id FROM roles WHERE name='ROLE_MODERATOR')"

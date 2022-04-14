@@ -21,7 +21,11 @@ public class DTOMapper {
     public Cafe fillCafeFromDTO(Cafe cafe, CafeRequest dto) {
         cafe.setName(dto.getName());
         cafe.setDescription(dto.getDescription());
-        cafe.setLocation(new Point(dto.getLocation().split(",")));
+        Point point = cafe.getLocation();
+        String[] newLocationString = dto.getLocation().split(",");
+        point.setLat(Double.parseDouble(newLocationString[0]));
+        point.setLng(Double.parseDouble(newLocationString[1]));
+        cafe.setLocation(point);
         cafe.setAddress(dto.getAddress());
         cafe.setPhone(dto.getPhone());
         cafe.setUrl(dto.getUrl());
