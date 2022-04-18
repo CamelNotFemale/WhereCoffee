@@ -94,17 +94,17 @@ public class CafeController {
     }
     @GetMapping("/ownership-claims")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<OwnershipClaimResponse>> getOwnershipClaims(
+    public List<OwnershipClaimResponse> getOwnershipClaims(
             @RequestParam(name = "page") Integer page) {
         return service.getClaimsPage(page);
     }
     @DeleteMapping("/ownership-claims/{id}")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void rejectOwnership(@PathVariable long id) {
         service.rejectOwnership(id);
     }
     @PostMapping("/ownership-claims/{id}")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void confirmOwnership(@PathVariable long id) {
         long userId = service.confirmOwnership(id);
         userService.giveModeratorRights(userId);

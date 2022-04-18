@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
@@ -75,7 +76,7 @@ public class CafeService {
         OwnershipClaim claim = new OwnershipClaim(getById(id), user, messengerLogin);
         ownershipRepository.save(claim);
     }
-    public ResponseEntity<List<OwnershipClaimResponse>> getClaimsPage(int page) {
+    public List<OwnershipClaimResponse> getClaimsPage(int page) {
         Pageable pageable = PageRequest.of(page, itemsOnPage);
         Page<OwnershipClaim> claims = ownershipRepository.findAll(pageable);
 
@@ -84,13 +85,12 @@ public class CafeService {
                 new OwnershipClaimResponse(
                         e.getId(),e.getCafe().getId(), e.getUser().getId(), e.getMessengerLogin())
         ));
-        return ResponseEntity
-                .ok()
-                .body(claimsResponse);
+        return claimsResponse;
     }
     public void rejectOwnership(long id) {
         ownershipRepository.deleteById(id);
     }
+    @Transactional
     public long confirmOwnership(long id) {
         OwnershipClaim claim = ownershipRepository.findById(id).orElseThrow(RuntimeException::new);
         Cafe cafe = claim.getCafe();

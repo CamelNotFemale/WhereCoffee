@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -83,7 +84,7 @@ public class UserService {
     }
     public void giveModeratorRights(long id) {
         User user = getById(id);
-        if (!user.getRoles().contains(ERole.valueOf("ROLE_MODERATOR"))) {
+        if (!user.isAdmin() && !user.isModerator()) {
             Set<Role> roles = new HashSet<>();
             roles.add(roleRepository.findByName(ERole.valueOf("ROLE_MODERATOR")).orElseThrow());
             user.setRoles(roles);
@@ -92,7 +93,7 @@ public class UserService {
     }
     public void giveAdminRights(long id) {
         User user = getById(id);
-        if (!user.getRoles().contains(ERole.valueOf("ROLE_ADMIN"))) {
+        if (!user.isAdmin()) {
             Set<Role> roles = new HashSet<>();
             roles.add(roleRepository.findByName(ERole.valueOf("ROLE_ADMIN")).orElseThrow());
             user.setRoles(roles);
