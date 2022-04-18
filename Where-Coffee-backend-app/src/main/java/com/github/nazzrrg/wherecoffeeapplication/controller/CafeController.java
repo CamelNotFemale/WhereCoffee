@@ -49,11 +49,18 @@ public class CafeController {
 
     @GetMapping
     public List<Cafe> getCafePage(@RequestParam(value = "page") Integer page,
+                                  @RequestParam(value = "items-on-page", defaultValue = "${netcracker.app.itemsOnPage}") Integer itemsOnPage,
                                   @RequestParam(value = "location", defaultValue = "59.965361,30.311645") String location,
                                   @RequestParam(value = "dist", defaultValue = "1.0") Double dist,
-                                  @RequestParam(value = "confirmed", defaultValue = "true") boolean confirmed) {
-        /** переделать с dto */
-        Page<Cafe> cafeterias = service.getPage(page, location, dist, confirmed);
+                                  @RequestParam(value = "confirmed", defaultValue = "true") boolean confirmed,
+                                  @RequestParam(value = "min-rating", defaultValue = "0.0") Double minRating,
+                                  @RequestParam(value = "name", defaultValue = "") String name,
+                                  @RequestParam(value = "manager", required = false) Long managerId,
+                                  @RequestParam(value = "perks", defaultValue = "") List<String> perks,
+                                  @RequestParam(value = "is-opened", required = false) boolean isOpened) {
+        /** переделать ответ с dto */
+        Page<Cafe> cafeterias = service.getPage(
+                page, itemsOnPage, location, dist, confirmed, minRating, name, managerId, perks, isOpened);
         return cafeterias.getContent();
     }
 
@@ -110,7 +117,7 @@ public class CafeController {
         userService.giveModeratorRights(userId);
     }
     @PostMapping("/{id}/confirm")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void confirmCafe(@PathVariable long id) {
         service.confirmCafe(id);
     }

@@ -112,25 +112,29 @@ public class CafeService {
         return repository.findAll(pageable);
     }
     public int getPageCount(String location, Double dist, boolean confirmed) {
+        int cafeCount;
         if (confirmed) {
             // точка центра поиска
             Double lat = Double.parseDouble(location.split(",")[0]);
             Double lng = Double.parseDouble(location.split(",")[1]);
-            int cafeCount = repository.countNearbyCoffeeShops(lat, lng, dist);
-            return (int)Math.ceil((double) cafeCount/itemsOnPage);
+            cafeCount = repository.countNearbyCoffeeShops(lat, lng, dist);
         }
         else {
-            int cafeCount = repository.countUnconfirmedCoffeeShops();
-            return (int)Math.ceil((double) cafeCount/itemsOnPage);
+            cafeCount = repository.countUnconfirmedCoffeeShops();
         }
+        return (int)Math.ceil((double) cafeCount/itemsOnPage);
     }
-    public Page<Cafe> getPage(int page, String location, Double dist, boolean confirmed) {
+    public Page<Cafe> getPage(int page, int itemsOnPage, String location, Double dist, boolean confirmed,
+                              Double minRating, String name, Long managerId, List<String> perks, boolean isOpened) {
         Pageable pageable = PageRequest.of(page, itemsOnPage, Sort.by(Sort.Direction.ASC, "id"));
-        if (confirmed) {
+        if (managerId != null) {
+            return repository.findManagedCoffeeShops(managerId, pageable);
+        }
+        else if (confirmed) {
             // точка центра поиска
             Double lat = Double.parseDouble(location.split(",")[0]);
             Double lng = Double.parseDouble(location.split(",")[1]);
-            return repository.findNearbyCoffeeShops(lat, lng, dist, pageable);
+            return repository.findNearbyCoffeeShops(lat, lng, dist, minRating, name, perks, pageable);
         }
         else {
             return repository.findUnconfirmedCoffeeShops(pageable);
