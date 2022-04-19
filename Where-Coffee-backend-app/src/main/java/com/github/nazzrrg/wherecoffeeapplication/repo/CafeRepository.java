@@ -15,18 +15,22 @@ import java.util.Optional;
 public interface CafeRepository extends JpaRepository<Cafe, Long> {
     Optional<Cafe> findById(Long id);
     boolean existsByIdApi(Long idApi);
-    // заменить с native на JPQL? по двум совпадающем перкам возвращает две одинаковые кофейни
+    
     @Query(value =
-            "select distinct on (c.id) c.* from cafeterias c left join cafeterias_perks cp on c.id = cp.cafeteria_id left join perks p on p.id = cp.perk_id\n" +
+            "select distinct on (c.id) c.* from cafeterias c " +
+            "       left join hours h on c.id = h.cafe_id\n" +
+            "       left join cafeterias_perks cp on c.id = cp.cafeteria_id\n" +
+            "       left join perks p on p.id = cp.perk_id\n" +
             "where (:minRating = 0.0 or rating >= :minRating) and lower(name) like concat('%',lower(:name),'%') and confirmed = true\n" +
+            "   and not :isOpened or (h.weekday = To_Char(now(), 'Day') and (current_time between h.start_time and h.end_time))" +
             "   and point_id in (\n" +
             "       select id from points\n" +
             "       where (111.2 * |/( (:lat - lat)^2 + ((:lng - lng)*cos(pi()*:lat/180))^2 ) <= :dist)\n" +
             "   )\n" +
-            "GROUP BY c.id\n" +
-            "HAVING coalesce(:perks) is null or string_to_array(:perks,',') && string_to_array(string_agg(p.title,','), ',')",
+            "group by c.id\n" +
+            "having coalesce(:perks) is null or string_to_array(:perks,',') && string_to_array(string_agg(p.title,','), ',')",
             nativeQuery = true)
-    Page<Cafe> findNearbyCoffeeShops(Double lat, Double lng, Double dist, Double minRating, String name, List<String> perks, Pageable pageable);
+    Page<Cafe> findNearbyCoffeeShops(Double lat, Double lng, Double dist, Double minRating, String name, List<String> perks, boolean isOpened, Pageable pageable);
     @Query(value =
             "select count(*) from cafeterias " +
             "where confirmed = true and point_id in (" +

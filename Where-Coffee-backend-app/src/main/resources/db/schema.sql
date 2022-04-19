@@ -1,3 +1,6 @@
+ALTER DATABASE coffee_shops SET TIMEZONE TO 'Europe/Moscow';
+SELECT pg_reload_conf();
+
 CREATE OR REPLACE FUNCTION cafe_by_grade(grade_id bigint) RETURNS bigint AS '
     BEGIN
         RETURN (

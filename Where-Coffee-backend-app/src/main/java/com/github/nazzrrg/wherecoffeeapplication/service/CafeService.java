@@ -134,7 +134,7 @@ public class CafeService {
             // точка центра поиска
             Double lat = Double.parseDouble(location.split(",")[0]);
             Double lng = Double.parseDouble(location.split(",")[1]);
-            return repository.findNearbyCoffeeShops(lat, lng, dist, minRating, name, perks, pageable);
+            return repository.findNearbyCoffeeShops(lat, lng, dist, minRating, name, perks, isOpened, pageable);
         }
         else {
             return repository.findUnconfirmedCoffeeShops(pageable);
