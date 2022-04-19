@@ -17,13 +17,14 @@ public interface CafeRepository extends JpaRepository<Cafe, Long> {
     boolean existsByIdApi(Long idApi);
     // заменить с native на JPQL? по двум совпадающем перкам возвращает две одинаковые кофейни
     @Query(value =
-            "select * from cafeterias c left join cafeterias_perks cp on c.id = cp.cafeteria_id left join perks p on p.id = cp.perk_id " +
-            "where (:minRating = 0.0 or rating >= :minRating) and lower(name) like concat('%',lower(:name),'%') and confirmed = true " +
-            "   and (coalesce(:perks) is null or title in (:perks)) " +
-            "   and point_id in ( " +
-            "       select id from points " +
-            "       where (111.2 * |/( (:lat - lat)^2 + ((:lng - lng)*cos(pi()*:lat/180))^2 ) <= :dist) " +
-            "   )",
+            "select distinct on (c.id) c.* from cafeterias c left join cafeterias_perks cp on c.id = cp.cafeteria_id left join perks p on p.id = cp.perk_id\n" +
+            "where (:minRating = 0.0 or rating >= :minRating) and lower(name) like concat('%',lower(:name),'%') and confirmed = true\n" +
+            "   and point_id in (\n" +
+            "       select id from points\n" +
+            "       where (111.2 * |/( (:lat - lat)^2 + ((:lng - lng)*cos(pi()*:lat/180))^2 ) <= :dist)\n" +
+            "   )\n" +
+            "GROUP BY c.id\n" +
+            "HAVING coalesce(:perks) is null or string_to_array(:perks,',') && string_to_array(string_agg(p.title,','), ',')",
             nativeQuery = true)
     Page<Cafe> findNearbyCoffeeShops(Double lat, Double lng, Double dist, Double minRating, String name, List<String> perks, Pageable pageable);
     @Query(value =

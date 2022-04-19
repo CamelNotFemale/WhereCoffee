@@ -48,7 +48,7 @@ public class CafeController {
     }
 
     @GetMapping
-    public List<Cafe> getCafePage(@RequestParam(value = "page") Integer page,
+    public List<Cafe> getCafePage(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                   @RequestParam(value = "items-on-page", defaultValue = "${netcracker.app.itemsOnPage}") Integer itemsOnPage,
                                   @RequestParam(value = "location", defaultValue = "59.965361,30.311645") String location,
                                   @RequestParam(value = "dist", defaultValue = "1.0") Double dist,
