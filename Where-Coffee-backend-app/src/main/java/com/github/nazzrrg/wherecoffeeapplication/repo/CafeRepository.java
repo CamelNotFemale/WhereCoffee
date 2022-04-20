@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface CafeRepository extends JpaRepository<Cafe, Long> {
     Optional<Cafe> findById(Long id);
     boolean existsByIdApi(Long idApi);
-    
+
     @Query(value =
             "select distinct on (c.id) c.* from cafeterias c " +
             "       left join hours h on c.id = h.cafe_id\n" +
@@ -28,9 +28,9 @@ public interface CafeRepository extends JpaRepository<Cafe, Long> {
             "       where (111.2 * |/( (:lat - lat)^2 + ((:lng - lng)*cos(pi()*:lat/180))^2 ) <= :dist)\n" +
             "   )\n" +
             "group by c.id\n" +
-            "having coalesce(:perks) is null or string_to_array(:perks,',') && string_to_array(string_agg(p.title,','), ',')",
+            "having char_length(:perks) = 0 or (string_to_array(:perks,',') <@ string_to_array(string_agg(p.title,','), ','))",
             nativeQuery = true)
-    Page<Cafe> findNearbyCoffeeShops(Double lat, Double lng, Double dist, Double minRating, String name, List<String> perks, boolean isOpened, Pageable pageable);
+    Page<Cafe> findNearbyCoffeeShops(Double lat, Double lng, Double dist, Double minRating, String name, String perks, boolean isOpened, Pageable pageable);
     @Query(value =
             "select count(*) from cafeterias " +
             "where confirmed = true and point_id in (" +

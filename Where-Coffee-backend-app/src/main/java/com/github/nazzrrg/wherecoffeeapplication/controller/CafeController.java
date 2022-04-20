@@ -58,7 +58,7 @@ public class CafeController {
                                   @RequestParam(value = "manager", required = false) Long managerId,
                                   @RequestParam(value = "perks", defaultValue = "") List<String> perks,
                                   @RequestParam(value = "is-opened", required = false) boolean isOpened) {
-        /** переделать ответ с dto */
+        /** возвращать структуру Page, а не getContent()! */
         Page<Cafe> cafeterias = service.getPage(
                 page, itemsOnPage, location, dist, confirmed, minRating, name, managerId, perks, isOpened);
         return cafeterias.getContent();
