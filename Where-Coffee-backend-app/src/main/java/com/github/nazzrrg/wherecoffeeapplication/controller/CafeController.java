@@ -48,7 +48,7 @@ public class CafeController {
     }
 
     @GetMapping
-    public List<Cafe> getCafePage(@RequestParam(value = "page", defaultValue = "0") Integer page,
+    public Page<Cafe> getCafePage(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                   @RequestParam(value = "items_on_page", defaultValue = "${netcracker.app.itemsOnPage}") Integer itemsOnPage,
                                   @RequestParam(value = "location", defaultValue = "59.965361,30.311645") String location,
                                   @RequestParam(value = "dist", defaultValue = "1.0") Double dist,
@@ -61,7 +61,7 @@ public class CafeController {
         /** возвращать структуру Page, а не getContent()! */
         Page<Cafe> cafeterias = service.getPage(
                 page, itemsOnPage, location, dist, confirmed, minRating, name, managerId, perks, isOpened);
-        return cafeterias.getContent();
+        return cafeterias;
     }
 
     @GetMapping("/pages-count")

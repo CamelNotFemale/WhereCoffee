@@ -41,6 +41,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
+    @PreAuthorize("isAuthenticated()")
     public User getById(@PathVariable long id) {
         return service.getById(id);
     }
