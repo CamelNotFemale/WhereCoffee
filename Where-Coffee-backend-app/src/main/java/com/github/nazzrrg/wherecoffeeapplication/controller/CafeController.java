@@ -49,15 +49,15 @@ public class CafeController {
 
     @GetMapping
     public List<Cafe> getCafePage(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                  @RequestParam(value = "items-on-page", defaultValue = "${netcracker.app.itemsOnPage}") Integer itemsOnPage,
+                                  @RequestParam(value = "items_on_page", defaultValue = "${netcracker.app.itemsOnPage}") Integer itemsOnPage,
                                   @RequestParam(value = "location", defaultValue = "59.965361,30.311645") String location,
                                   @RequestParam(value = "dist", defaultValue = "1.0") Double dist,
                                   @RequestParam(value = "confirmed", defaultValue = "true") boolean confirmed,
-                                  @RequestParam(value = "min-rating", defaultValue = "0.0") Double minRating,
+                                  @RequestParam(value = "min_rating", defaultValue = "0.0") Double minRating,
                                   @RequestParam(value = "name", defaultValue = "") String name,
                                   @RequestParam(value = "manager", required = false) Long managerId,
                                   @RequestParam(value = "perks", defaultValue = "") List<String> perks,
-                                  @RequestParam(value = "is-opened", required = false) boolean isOpened) {
+                                  @RequestParam(value = "is_opened", required = false) boolean isOpened) {
         /** возвращать структуру Page, а не getContent()! */
         Page<Cafe> cafeterias = service.getPage(
                 page, itemsOnPage, location, dist, confirmed, minRating, name, managerId, perks, isOpened);

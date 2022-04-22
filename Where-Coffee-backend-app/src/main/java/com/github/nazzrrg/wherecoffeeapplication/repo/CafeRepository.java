@@ -22,7 +22,7 @@ public interface CafeRepository extends JpaRepository<Cafe, Long> {
             "       left join cafeterias_perks cp on c.id = cp.cafeteria_id\n" +
             "       left join perks p on p.id = cp.perk_id\n" +
             "where (:minRating = 0.0 or rating >= :minRating) and lower(name) like concat('%',lower(:name),'%') and confirmed = true\n" +
-            "   and not :isOpened or (h.weekday = To_Char(now(), 'Day') and (current_time between h.start_time and h.end_time))" +
+            "   and (not :isOpened or (h.weekday = TRIM(To_Char(now(), 'Day')) and (current_time between h.start_time and h.end_time)))\n" +
             "   and point_id in (\n" +
             "       select id from points\n" +
             "       where (111.2 * |/( (:lat - lat)^2 + ((:lng - lng)*cos(pi()*:lat/180))^2 ) <= :dist)\n" +

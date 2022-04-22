@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class DTOMapper {
@@ -21,7 +22,7 @@ public class DTOMapper {
     public Cafe fillCafeFromDTO(Cafe cafe, CafeRequest dto) {
         cafe.setName(dto.getName());
         cafe.setDescription(dto.getDescription());
-        Point point = cafe.getLocation();
+        Point point = Optional.ofNullable(cafe.getLocation()).orElseGet(Point::new);
         String[] newLocationString = dto.getLocation().split(",");
         point.setLat(Double.parseDouble(newLocationString[0]));
         point.setLng(Double.parseDouble(newLocationString[1]));
