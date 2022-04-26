@@ -64,13 +64,6 @@ public class CafeController {
         return cafeterias;
     }
 
-    @GetMapping("/pages-count")
-    public int getCountPage(@RequestParam(value = "location", defaultValue = "59.965361,30.311645") String location,
-                            @RequestParam(value = "dist", defaultValue = "1.0") Double dist,
-                            @RequestParam(value = "confirmed", defaultValue = "true") boolean confirmed) {
-        return service.getPageCount(location, dist, confirmed);
-    }
-
     @GetMapping("/{id}")
     public Cafe getCafe(@PathVariable long id) {
         /** переделать с dto */
@@ -100,8 +93,8 @@ public class CafeController {
         service.addDesireToOwn(id, user, ownershipRequest.getMessengerLogin());
     }
     @GetMapping("/ownership-claims")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public List<OwnershipClaimResponse> getOwnershipClaims(
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public Page<OwnershipClaimResponse> getOwnershipClaims(
             @RequestParam(name = "page") Integer page) {
         return service.getClaimsPage(page);
     }

@@ -9,10 +9,7 @@ import com.github.nazzrrg.wherecoffeeapplication.payload.response.OwnershipClaim
 import com.github.nazzrrg.wherecoffeeapplication.repo.*;
 import com.github.nazzrrg.wherecoffeeapplication.utils.DTOMapper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -76,7 +73,7 @@ public class CafeService {
         OwnershipClaim claim = new OwnershipClaim(getById(id), user, messengerLogin);
         ownershipRepository.save(claim);
     }
-    public List<OwnershipClaimResponse> getClaimsPage(int page) {
+    public Page<OwnershipClaimResponse> getClaimsPage(int page) {
         Pageable pageable = PageRequest.of(page, itemsOnPage);
         Page<OwnershipClaim> claims = ownershipRepository.findAll(pageable);
 
@@ -85,7 +82,8 @@ public class CafeService {
                 new OwnershipClaimResponse(
                         e.getId(),e.getCafe().getId(), e.getUser().getId(), e.getMessengerLogin())
         ));
-        return claimsResponse;
+
+        return new PageImpl<OwnershipClaimResponse>(claimsResponse, pageable, claims.getTotalElements());
     }
     public void rejectOwnership(long id) {
         ownershipRepository.deleteById(id);
@@ -110,19 +108,6 @@ public class CafeService {
     public Page<Cafe> getPage(int page) {
         Pageable pageable = PageRequest.of(page, itemsOnPage);
         return repository.findAll(pageable);
-    }
-    public int getPageCount(String location, Double dist, boolean confirmed) {
-        int cafeCount;
-        if (confirmed) {
-            // точка центра поиска
-            Double lat = Double.parseDouble(location.split(",")[0]);
-            Double lng = Double.parseDouble(location.split(",")[1]);
-            cafeCount = repository.countNearbyCoffeeShops(lat, lng, dist);
-        }
-        else {
-            cafeCount = repository.countUnconfirmedCoffeeShops();
-        }
-        return (int)Math.ceil((double) cafeCount/itemsOnPage);
     }
     public Page<Cafe> getPage(int page, int itemsOnPage, String location, Double dist, boolean confirmed,
                               Double minRating, String name, Long managerId, List<String> perks, boolean isOpened) {

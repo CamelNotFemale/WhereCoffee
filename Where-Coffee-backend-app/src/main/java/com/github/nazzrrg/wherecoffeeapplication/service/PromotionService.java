@@ -31,7 +31,7 @@ public class PromotionService {
     public Promotion getPromotion(long id) {
         return promotionRepository.findById(id).orElseThrow(RuntimeException::new);
     }
-    public Page<Promotion> getPage(User user, int page) {
+    public Page<Promotion> getPage(User user, int page, int itemsOnPage) {
         Pageable pageable = PageRequest.of(page, itemsOnPage);
         return promotionRepository.findAllByUser(user, pageable);
     }

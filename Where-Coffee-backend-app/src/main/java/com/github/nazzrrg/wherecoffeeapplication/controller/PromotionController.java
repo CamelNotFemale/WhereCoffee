@@ -34,10 +34,11 @@ public class PromotionController {
     @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_MODERATOR', 'ROLE_ADMIN')")
     public Page<Promotion> getPromotions(Authentication auth,
-                                         @RequestParam(name = "page") int page) {
+                                         @RequestParam(name = "page") int page,
+                                         @RequestParam(name = "items_on_page", defaultValue = "${netcracker.app.itemsOnPage}") int itemsOnPage) {
         UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
         User user = userService.getById(userDetails.getId());
-        Page<Promotion> promotions = service.getPage(user, page);
+        Page<Promotion> promotions = service.getPage(user, page, itemsOnPage);
         return promotions;
     }
     @PostMapping

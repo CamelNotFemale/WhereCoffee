@@ -25,8 +25,6 @@ public interface PromotionRepository extends JpaRepository<Promotion, Long> {
             "where promotion_id = ( " +
             "        select id from promotions " +
             "        where to_date < NOW() " +
-            "    ); " +
-            "delete from promotions " +
-            "where to_date < NOW();", nativeQuery = true)
+            "    ); ", nativeQuery = true)
     int deleteIrrelevantPromotions();
 }
