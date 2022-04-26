@@ -55,6 +55,18 @@ public class CafeService {
     public Cafe getById(long id) {
         return repository.findById(id).orElseThrow(RuntimeException::new);
     }
+    public Cafe getByIdAndPromo(long id, boolean allPromo) {
+        if (allPromo) return getById(id);
+        else {
+            return repository.findByIdAndRelevantPromotions(id).orElseGet(() -> {
+                Cafe cafe = getById(id);
+                cafe.setPromotions(new ArrayList<>());
+                return cafe;
+            });
+            //return repository.findByIdAndRelevantPromotions(id).orElse(getById(id)).setPromotions(null);
+        }
+    }
+
     public void update(long id, CafeRequest cafeRequest) {
         Cafe cafeToBeUpdated = getById(id);
         cafeToBeUpdated = mapper.fillCafeFromDTO(cafeToBeUpdated, cafeRequest);
@@ -73,7 +85,7 @@ public class CafeService {
         OwnershipClaim claim = new OwnershipClaim(getById(id), user, messengerLogin);
         ownershipRepository.save(claim);
     }
-    public Page<OwnershipClaimResponse> getClaimsPage(int page) {
+    public Page<OwnershipClaimResponse> getClaimsPage(int page, int itemsOnPage) {
         Pageable pageable = PageRequest.of(page, itemsOnPage);
         Page<OwnershipClaim> claims = ownershipRepository.findAll(pageable);
 

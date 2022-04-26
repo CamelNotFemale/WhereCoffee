@@ -65,9 +65,9 @@ public class CafeController {
     }
 
     @GetMapping("/{id}")
-    public Cafe getCafe(@PathVariable long id) {
+    public Cafe getCafe(@PathVariable long id, @RequestParam(value = "all_promo", required = false) boolean allPromo) {
         /** переделать с dto */
-        return service.getById(id);
+        return service.getByIdAndPromo(id, allPromo);
     }
 
     @DeleteMapping("/{id}")
@@ -95,8 +95,9 @@ public class CafeController {
     @GetMapping("/ownership-claims")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Page<OwnershipClaimResponse> getOwnershipClaims(
-            @RequestParam(name = "page") Integer page) {
-        return service.getClaimsPage(page);
+            @RequestParam(name = "page") Integer page,
+            @RequestParam(value = "items_on_page", defaultValue = "${netcracker.app.itemsOnPage}") Integer itemsOnPage) {
+        return service.getClaimsPage(page, itemsOnPage);
     }
     @DeleteMapping("/ownership-claims/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
