@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials = "true")
+@CrossOrigin(origins = "${netcracker.front.api}", maxAge = 3600, allowCredentials = "true")
 @RestController
 @RequestMapping("/promotions")
 public class PromotionController {
@@ -27,7 +27,7 @@ public class PromotionController {
         this.service = service;
     }
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_MODERATOR', 'ROLE_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public Promotion getPromotion(@PathVariable long id) {
         return service.getPromotion(id);
     }
