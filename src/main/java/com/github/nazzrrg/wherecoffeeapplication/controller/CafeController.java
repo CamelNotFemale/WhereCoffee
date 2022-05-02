@@ -145,6 +145,22 @@ public class CafeController {
         return service.deleteReview(id, userId);
     }
 
+    @GetMapping("/{id}/favorites")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER')")
+    public boolean checkFavorite(Authentication auth,
+                                 @PathVariable long id) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
+        return service.checkFavorites(id, userDetails.getId());
+    }
+
+    @PostMapping("/{id}/favorites")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER')")
+    public ResponseEntity<MessageResponse> addToFavorite(Authentication auth,
+                                                     @PathVariable long id) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
+        return service.addToFavorites(id, userDetails.getId());
+    }
+
     @PostMapping("/update")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<MessageResponse> updateCafeterias(@RequestParam(value = "res", defaultValue = "1") Integer res,

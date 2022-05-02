@@ -87,3 +87,26 @@ DROP TRIGGER IF EXISTS rating_audit ON grades;
 CREATE TRIGGER rating_audit
     AFTER UPDATE OR DELETE ON grades
     FOR EACH ROW EXECUTE PROCEDURE process_rating_audit();
+
+-- Сколько раз кофейню добавили в избранное
+CREATE OR REPLACE FUNCTION process_favorites_audit() RETURNS TRIGGER AS '
+    DECLARE
+    BEGIN
+        IF (TG_OP = ''INSERT'') THEN
+            UPDATE cafeterias SET favorites_count = cafeterias.favorites_count + 1
+            WHERE id = NEW.cafeteria_id;
+            RETURN NEW;
+        ELSIF (TG_OP = ''DELETE'') THEN
+            UPDATE cafeterias SET favorites_count = cafeterias.favorites_count - 1
+            WHERE id = OLD.cafeteria_id;
+            RETURN OLD;
+        END IF;
+        RETURN NULL; -- возвращаемое значение для триггера AFTER игнорируется
+    END;
+' LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS favorites_audit ON user_cafeterias;
+
+CREATE TRIGGER favorites_audit
+    AFTER INSERT OR DELETE ON user_cafeterias
+    FOR EACH ROW EXECUTE PROCEDURE process_favorites_audit();

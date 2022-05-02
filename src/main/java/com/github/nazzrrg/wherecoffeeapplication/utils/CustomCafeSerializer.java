@@ -20,6 +20,7 @@ public class CustomCafeSerializer extends StdSerializer<List<Cafe>> {
     @Override
     public void serialize(List<Cafe> cafes, JsonGenerator gen, SerializerProvider serializerProvider) throws IOException {
         //long[] ids = cafes.stream().map(Cafe::getId).mapToLong(x -> x).toArray();
+        //gen.writeArray(ids, 0, ids.length);
         gen.writeStartArray();
         for (Cafe cafe : cafes) {
             gen.writeStartObject();

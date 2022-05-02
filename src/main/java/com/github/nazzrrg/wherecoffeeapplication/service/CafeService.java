@@ -218,4 +218,22 @@ public class CafeService {
                 .ok()
                 .body(new MessageResponse("Grade deleted successfully"));
     }
+
+    public boolean checkFavorites(long cafeId, long userId) {
+        return repository.alreadyInFavorites(cafeId, userId);
+    }
+    public ResponseEntity<MessageResponse> addToFavorites(long cafeId, long userId) {
+        if (repository.alreadyInFavorites(cafeId, userId)) {
+            repository.deleteFromFavorites(cafeId, userId);
+            return ResponseEntity
+                    .ok()
+                    .body(new MessageResponse("The coffee shop successfully removed from favorites"));
+        }
+        else {
+            repository.addToFavorites(cafeId, userId);
+            return ResponseEntity
+                    .ok()
+                    .body(new MessageResponse("The coffee shop has been successfully added to favorites"));
+        }
+    }
 }

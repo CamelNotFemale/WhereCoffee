@@ -3,6 +3,7 @@ package com.github.nazzrrg.wherecoffeeapplication.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -29,6 +30,9 @@ public class Cafe {
     private String url;
     private String phone;
     private Double rating;
+    @JoinColumn(name = "favorites_count")
+    @Value("0")
+    private Integer favoritesCount;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager")
     private User manager;

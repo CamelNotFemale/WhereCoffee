@@ -2,12 +2,12 @@ package com.github.nazzrrg.wherecoffeeapplication.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.github.nazzrrg.wherecoffeeapplication.utils.CustomCafeSerializer;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
@@ -34,7 +34,12 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
-    
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(	name = "user_cafeterias",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "cafeteria_id"))
+    @JsonSerialize(using = CustomCafeSerializer.class)
+    private List<Cafe> favoriteCafeterias = new ArrayList<>();
 
     public User() {
         username = firstName = surname = patronymic = email = phone = password = "";

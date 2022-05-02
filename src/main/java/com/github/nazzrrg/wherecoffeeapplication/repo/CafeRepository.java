@@ -4,8 +4,10 @@ import com.github.nazzrrg.wherecoffeeapplication.model.Cafe;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -51,4 +53,25 @@ public interface CafeRepository extends JpaRepository<Cafe, Long> {
             "limit 1",
             nativeQuery = true)
     boolean isACafeteriaManager(Long cafeId, Long userId);*/
+    @Query(value =
+            "select" +
+            "       case when count(*) > 0 then 'TRUE' else 'FALSE' end as exist_comment" +
+            "       from user_cafeterias " +
+            "where cafeteria_id = :cafeId AND user_id = :userId " +
+            "limit 1",
+            nativeQuery = true)
+    boolean alreadyInFavorites(Long cafeId, Long userId);
+    @Query(value =
+            "insert into user_cafeterias values (:userId, :cafeId)",
+            nativeQuery = true)
+    @Modifying
+    @Transactional
+    int addToFavorites(Long cafeId, Long userId);
+    @Query(value =
+            "delete from user_cafeterias " +
+            "where cafeteria_id = :cafeId and user_id = :userId",
+            nativeQuery = true)
+    @Modifying
+    @Transactional
+    int deleteFromFavorites(Long cafeId, Long userId);
 }
