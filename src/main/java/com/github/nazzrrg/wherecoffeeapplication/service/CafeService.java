@@ -39,7 +39,10 @@ public class CafeService {
         this.ownershipRepository = ownershipRepository;
         this.mapper = mapper;
     }
-    /** создание кофеен из API */
+
+    /**
+     * создание кофеен из API
+     */
     public boolean create(Cafe cafe) {
         if (!(cafe.getIdApi() != null && repository.existsByIdApi(cafe.getIdApi()))) {
             repository.save(cafe);
@@ -47,14 +50,19 @@ public class CafeService {
         }
         return false;
     }
-    /** создание собственных кофеен */
+
+    /**
+     * создание собственных кофеен
+     */
     public void create(CafeRequest cafeRequest) {
         Cafe cafe = mapper.toCafe(cafeRequest);
         repository.save(cafe);
     }
+
     public Cafe getById(long id) {
         return repository.findById(id).orElseThrow(RuntimeException::new);
     }
+
     public Cafe getByIdAndPromo(long id, boolean allPromo) {
         if (allPromo) return getById(id);
         else {
@@ -63,7 +71,6 @@ public class CafeService {
                 cafe.setPromotions(new ArrayList<>());
                 return cafe;
             });
-            //return repository.findByIdAndRelevantPromotions(id).orElse(getById(id)).setPromotions(null);
         }
     }
 
@@ -72,6 +79,7 @@ public class CafeService {
         cafeToBeUpdated = mapper.fillCafeFromDTO(cafeToBeUpdated, cafeRequest);
         repository.save(cafeToBeUpdated);
     }
+
     public void delete(long id) {
         repository.deleteById(id);
     }
@@ -85,6 +93,7 @@ public class CafeService {
         OwnershipClaim claim = new OwnershipClaim(getById(id), user, messengerLogin);
         ownershipRepository.save(claim);
     }
+
     public Page<OwnershipClaimResponse> getClaimsPage(int page, int itemsOnPage) {
         Pageable pageable = PageRequest.of(page, itemsOnPage);
         Page<OwnershipClaim> claims = ownershipRepository.findAll(pageable);
@@ -92,14 +101,16 @@ public class CafeService {
         List<OwnershipClaimResponse> claimsResponse = new ArrayList<>();
         claims.getContent().forEach((e) -> claimsResponse.add(
                 new OwnershipClaimResponse(
-                        e.getId(),e.getCafe().getId(), e.getUser().getId(), e.getMessengerLogin())
+                        e.getId(), e.getCafe().getId(), e.getUser().getId(), e.getMessengerLogin())
         ));
 
         return new PageImpl<OwnershipClaimResponse>(claimsResponse, pageable, claims.getTotalElements());
     }
+
     public void rejectOwnership(long id) {
         ownershipRepository.deleteById(id);
     }
+
     @Transactional
     public long confirmOwnership(long id) {
         OwnershipClaim claim = ownershipRepository.findById(id).orElseThrow(RuntimeException::new);
@@ -111,6 +122,7 @@ public class CafeService {
 
         return user.getId();
     }
+
     public void confirmCafe(long id) {
         Cafe cafe = getById(id);
         cafe.setConfirmed(true);
@@ -121,20 +133,19 @@ public class CafeService {
         Pageable pageable = PageRequest.of(page, itemsOnPage);
         return repository.findAll(pageable);
     }
+
     public Page<Cafe> getPage(int page, int itemsOnPage, String location, Double dist, boolean confirmed,
                               Double minRating, String name, Long managerId, List<String> perks, boolean isOpened) {
         Pageable pageable = PageRequest.of(page, itemsOnPage, Sort.by(Sort.Direction.ASC, "id"));
         if (managerId != null) {
             return repository.findManagedCoffeeShops(managerId, pageable);
-        }
-        else if (confirmed) {
+        } else if (confirmed) {
             // точка центра поиска
             Double lat = Double.parseDouble(location.split(",")[0]);
             Double lng = Double.parseDouble(location.split(",")[1]);
             String perksStr = String.join(",", perks);
             return repository.findNearbyCoffeeShops(lat, lng, dist, minRating, name, perksStr, isOpened, pageable);
-        }
-        else {
+        } else {
             return repository.findUnconfirmedCoffeeShops(pageable);
         }
     }
@@ -156,17 +167,18 @@ public class CafeService {
         });
 
         Grade grade = new Grade(gradeRequest.getComment(),
-                                gradeRequest.getGrade(),
-                                perks,
-                                user
-                                );
+                gradeRequest.getGrade(),
+                perks,
+                user
+        );
         cafe.getGrades().add(grade);
         repository.save(cafe);
 
         return ResponseEntity
-                .created(URI.create("http://localhost/cafeterias/"+id))
+                .created(URI.create("http://localhost/cafeterias/" + id))
                 .body(new MessageResponse("Grade added successfully"));
     }
+
     public ResponseEntity<MessageResponse> updateReview(Long id, Long userId, GradeRequest gradeRequest) {
         Grade grade = gradeRepository.findByUserAndCafeIds(id, userId);
         if (grade == null) {
@@ -191,6 +203,7 @@ public class CafeService {
                 .ok()
                 .body(new MessageResponse("Grade updated successfully"));
     }
+
     public ResponseEntity<MessageResponse> deleteReview(Long id, Long userId) {
         Grade grade = gradeRepository.findByUserAndCafeIds(id, userId);
         if (grade == null) {

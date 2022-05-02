@@ -92,6 +92,7 @@ public class CafeController {
         User user = userService.getById(userDetails.getId());
         service.addDesireToOwn(id, user, ownershipRequest.getMessengerLogin());
     }
+
     @GetMapping("/ownership-claims")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Page<OwnershipClaimResponse> getOwnershipClaims(
@@ -99,17 +100,20 @@ public class CafeController {
             @RequestParam(value = "items_on_page", defaultValue = "${netcracker.app.itemsOnPage}") Integer itemsOnPage) {
         return service.getClaimsPage(page, itemsOnPage);
     }
+
     @DeleteMapping("/ownership-claims/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void rejectOwnership(@PathVariable long id) {
         service.rejectOwnership(id);
     }
+
     @PostMapping("/ownership-claims/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void confirmOwnership(@PathVariable long id) {
         long userId = service.confirmOwnership(id);
         userService.giveModeratorRights(userId);
     }
+
     @PostMapping("/{id}/confirm")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void confirmCafe(@PathVariable long id) {
@@ -125,6 +129,7 @@ public class CafeController {
         User user = userService.getById(userDetails.getId());
         return service.addReview(id, user, grade);
     }
+
     @PatchMapping("/{id}/review/{userId}")
     @PreAuthorize("#userId == authentication.principal.id or hasRole('ROLE_ADMIN')")
     public ResponseEntity<MessageResponse> updateReview(@PathVariable long id,
@@ -132,6 +137,7 @@ public class CafeController {
                                                         @RequestBody GradeRequest grade) {
         return service.updateReview(id, userId, grade);
     }
+
     @DeleteMapping("/{id}/review/{userId}")
     @PreAuthorize("#userId == authentication.principal.id or hasRole('ROLE_ADMIN')")
     public ResponseEntity<MessageResponse> deleteReview(@PathVariable long id,
@@ -141,7 +147,7 @@ public class CafeController {
 
     @PostMapping("/update")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<MessageResponse> updateCafeterias(@RequestParam(value = "res",defaultValue = "1") Integer res,
+    public ResponseEntity<MessageResponse> updateCafeterias(@RequestParam(value = "res", defaultValue = "1") Integer res,
                                                             @Value("${netcracker.app.areas}") String areas,
                                                             @Value("${netcracker.app.updateURL}") String urlPattern,
                                                             @Value("${netcracker.app.mapAPI}") String apikey) {

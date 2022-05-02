@@ -46,8 +46,7 @@ public class UserService {
     public void create(@RequestBody User user) {
         if (repository.existsByUsername(user.getUsername())) {
             repository.save(user);
-        }
-        else new RuntimeException("Error: username is taken!");
+        } else new RuntimeException("Error: username is taken!");
     }
 
     public Page<User> getPage(Integer page, String username, String role) {
@@ -58,11 +57,13 @@ public class UserService {
     public User getById(long id) {
         return repository.findById(id).orElseThrow(RuntimeException::new);
     }
+
     @Transactional
     public User update(long id, UserUpdateRequest userRequest) {
         User userToBeUpdated = getById(id);
 
-        userToBeUpdated.setFirstName(userRequest.getFirstName());;
+        userToBeUpdated.setFirstName(userRequest.getFirstName());
+        ;
         userToBeUpdated.setSurname(userRequest.getSurname());
         userToBeUpdated.setPatronymic(userRequest.getPatronymic());
         userToBeUpdated.setBirthDay(userRequest.getBirthDay());
@@ -79,9 +80,11 @@ public class UserService {
 
         return repository.save(userToBeUpdated);
     }
+
     public void delete(long id) {
         repository.deleteById(id);
     }
+
     public void giveModeratorRights(long id) {
         User user = getById(id);
         if (!user.isAdmin() && !user.isModerator()) {
@@ -91,6 +94,7 @@ public class UserService {
             repository.save(user);
         }
     }
+
     public void giveAdminRights(long id) {
         User user = getById(id);
         if (!user.isAdmin()) {

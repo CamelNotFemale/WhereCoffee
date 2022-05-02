@@ -24,17 +24,20 @@ public class PromotionService {
     private final PromotionRepository promotionRepository;
 
     public PromotionService(CafeRepository repository,
-                       PromotionRepository promotionRepository) {
+                            PromotionRepository promotionRepository) {
         this.repository = repository;
         this.promotionRepository = promotionRepository;
     }
+
     public Promotion getPromotion(long id) {
         return promotionRepository.findById(id).orElseThrow(RuntimeException::new);
     }
+
     public Page<Promotion> getPage(User user, int page, int itemsOnPage) {
         Pageable pageable = PageRequest.of(page, itemsOnPage);
         return promotionRepository.findAllByUser(user, pageable);
     }
+
     @Transactional
     public ResponseEntity<MessageResponse> createPromotion(User user, PromotionRequest promoReq) {
         Promotion promo = new Promotion(promoReq.getTitle(),
@@ -43,13 +46,12 @@ public class PromotionService {
                 promoReq.getTo(),
                 user);
         Promotion promoEntity = promotionRepository.save(promo);
-        for (long id: promoReq.getCafeteriaIds()) {
+        for (long id : promoReq.getCafeteriaIds()) {
             Cafe cafe = repository.findById(id).orElseThrow();
             if (user.isAdmin() || cafe.getManager() != null && cafe.getManager().getId() == user.getId()) {
                 cafe.getPromotions().add(promoEntity);
                 repository.save(cafe);
-            }
-            else {
+            } else {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return ResponseEntity
                         .badRequest()
@@ -61,6 +63,7 @@ public class PromotionService {
                 .ok()
                 .body(new MessageResponse("Promotion successfully created!"));
     }
+
     @Transactional
     public ResponseEntity<MessageResponse> updatePromotion(Long promoId, UserDetailsImpl userDetails, PromotionRequest promoReq) {
         Promotion promo = promotionRepository.getById(promoId);
@@ -70,13 +73,12 @@ public class PromotionService {
             promo.setDescription(promoReq.getDescription());
             promo.setFromDate(promoReq.getFrom());
             promo.setToDate(promoReq.getTo());
-            for (long id: promoReq.getCafeteriaIds()) {
+            for (long id : promoReq.getCafeteriaIds()) {
                 Cafe cafe = repository.findById(id).orElseThrow();
                 if (userDetails.isAdmin() || cafe.getManager() != null && cafe.getManager().getId() == userDetails.getId()) {
                     cafe.getPromotions().add(promo);
                     repository.save(cafe);
-                }
-                else {
+                } else {
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                     return ResponseEntity
                             .badRequest()
@@ -87,14 +89,14 @@ public class PromotionService {
             return ResponseEntity
                     .ok()
                     .body(new MessageResponse("Promotion successfully updated!"));
-        }
-        else {
+        } else {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: сan't edit someone else's promotion!"));
         }
     }
+
     @Transactional
     public ResponseEntity<MessageResponse> deletePromotion(Long promoId, UserDetailsImpl userDetails) {
         Promotion promo = promotionRepository.getById(promoId);
@@ -104,8 +106,7 @@ public class PromotionService {
             return ResponseEntity
                     .ok()
                     .body(new MessageResponse("Promotion successfully deleted!"));
-        }
-        else {
+        } else {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return ResponseEntity
                     .badRequest()

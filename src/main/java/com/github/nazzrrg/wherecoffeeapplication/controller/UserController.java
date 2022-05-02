@@ -34,8 +34,8 @@ public class UserController {
     @GetMapping("/users")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     public List<User> getUsers(@RequestParam(value = "page") Integer page,
-                                 @RequestParam(value = "username", defaultValue = "") String username,
-                                 @RequestParam(value = "role", defaultValue = "ROLE_USER") String role) {
+                               @RequestParam(value = "username", defaultValue = "") String username,
+                               @RequestParam(value = "role", defaultValue = "ROLE_USER") String role) {
         Page<User> users = service.getPage(page, username, role);
         return users.getContent();
     }
@@ -52,6 +52,7 @@ public class UserController {
                        @RequestBody UserUpdateRequest user) {
         return service.update(id, user);
     }
+
     @DeleteMapping("/users/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void delete(@PathVariable long id) {

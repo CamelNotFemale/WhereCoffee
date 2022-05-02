@@ -21,11 +21,11 @@ public class CustomCafeSerializer extends StdSerializer<List<Cafe>> {
     public void serialize(List<Cafe> cafes, JsonGenerator gen, SerializerProvider serializerProvider) throws IOException {
         //long[] ids = cafes.stream().map(Cafe::getId).mapToLong(x -> x).toArray();
         gen.writeStartArray();
-        for (Cafe cafe: cafes) {
+        for (Cafe cafe : cafes) {
             gen.writeStartObject();
-                gen.writeStringField("id", cafe.getId().toString());
-                gen.writeStringField("name", cafe.getName());
-                gen.writeStringField("address", cafe.getAddress());
+            gen.writeStringField("id", cafe.getId().toString());
+            gen.writeStringField("name", cafe.getName());
+            gen.writeStringField("address", cafe.getAddress());
             gen.writeEndObject();
         }
         gen.writeEndArray();

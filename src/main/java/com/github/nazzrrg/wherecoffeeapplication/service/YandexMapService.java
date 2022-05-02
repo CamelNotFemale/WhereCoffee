@@ -33,9 +33,10 @@ public class YandexMapService {
         JSONArray cafeterias = (JSONArray) jo.get("features");
         return cafeterias;
     }
+
     public int uploadFromJSON(JSONArray cafeterias) {
         int count = 0;
-        for (int i =0; i< cafeterias.size(); i++) {
+        for (int i = 0; i < cafeterias.size(); i++) {
             JSONObject joCafe = (JSONObject) cafeterias.get(i);
             Cafe cafe = JSONMapper.toCafe(joCafe);
             cafe.setConfirmed(true);
@@ -45,10 +46,11 @@ public class YandexMapService {
         }
         return count;
     }
+
     public ResponseEntity<MessageResponse> updateCafeterias(Integer res, String areas,
                                                             String urlPattern, String apikey) {
         int count = 0, size = 0;
-        for (String area: areas.split(";")) {
+        for (String area : areas.split(";")) {
             String request = String.format(urlPattern, area, res, apikey);
             JSONArray cafeterias = getJSONFromAPI(request);
             size += cafeterias.size();
@@ -56,7 +58,7 @@ public class YandexMapService {
         }
 
         return ResponseEntity
-                .created(URI.create("http://localhost/cafeterias/update?res="+res))
-                .body(new MessageResponse("Out of "+size+" found successfully added "+count+" coffee shops"));
+                .created(URI.create("http://localhost/cafeterias/update?res=" + res))
+                .body(new MessageResponse("Out of " + size + " found successfully added " + count + " coffee shops"));
     }
 }

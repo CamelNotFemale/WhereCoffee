@@ -26,11 +26,13 @@ public class PromotionController {
         this.userService = userService;
         this.service = service;
     }
+
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     public Promotion getPromotion(@PathVariable long id) {
         return service.getPromotion(id);
     }
+
     @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_MODERATOR', 'ROLE_ADMIN')")
     public Page<Promotion> getPromotions(Authentication auth,
@@ -41,6 +43,7 @@ public class PromotionController {
         Page<Promotion> promotions = service.getPage(user, page, itemsOnPage);
         return promotions;
     }
+
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_MODERATOR', 'ROLE_ADMIN')")
     public ResponseEntity<MessageResponse> createPromotion(Authentication auth,
@@ -49,18 +52,20 @@ public class PromotionController {
         User user = userService.getById(userDetails.getId());
         return service.createPromotion(user, promoReq);
     }
+
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_MODERATOR', 'ROLE_ADMIN')")
     public ResponseEntity<MessageResponse> updatePromotion(Authentication auth,
-                                @PathVariable long id,
-                                @RequestBody PromotionRequest promoReq) {
+                                                           @PathVariable long id,
+                                                           @RequestBody PromotionRequest promoReq) {
         UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
         return service.updatePromotion(id, userDetails, promoReq);
     }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_MODERATOR', 'ROLE_ADMIN')")
     public ResponseEntity<MessageResponse> deletePromotion(Authentication auth,
-                                @PathVariable long id) {
+                                                           @PathVariable long id) {
         UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
         return service.deletePromotion(id, userDetails);
     }

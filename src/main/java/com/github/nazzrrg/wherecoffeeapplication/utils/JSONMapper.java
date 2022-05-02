@@ -17,9 +17,11 @@ public class JSONMapper {
     private static boolean checkEveryday(JSONObject availability) {
         return availability.get("Everyday") != null;
     }
+
     private static boolean checkTwentyFourHours(JSONObject availability) {
         return availability.get("TwentyFourHours") != null;
     }
+
     private static List<Hours> parseWorkingHours(JSONObject jo) {
         List<Hours> workingHours = new ArrayList<>();
 
@@ -58,14 +60,16 @@ public class JSONMapper {
 
         return workingHours;
     }
+
     private static String[] parseCoordinates(String location) {
-        location = location.substring(1, location.length()-1);
+        location = location.substring(1, location.length() - 1);
         String[] coord = location.split(",");
         String temp = coord[0];
         coord[0] = coord[1];
         coord[1] = temp;
         return coord;
     }
+
     public static Cafe toCafe(JSONObject jo) {
         Cafe cafe = new Cafe();
 
@@ -79,7 +83,7 @@ public class JSONMapper {
         JSONObject companyMetaData = (JSONObject) properties.get("CompanyMetaData");
         cafe.setIdApi(Long.parseLong(companyMetaData.get("id").toString()));
         cafe.setAddress(companyMetaData.get("address").toString());
-        if (companyMetaData.get("url")!=null) cafe.setUrl(companyMetaData.get("url").toString());
+        if (companyMetaData.get("url") != null) cafe.setUrl(companyMetaData.get("url").toString());
         JSONArray phones = (JSONArray) companyMetaData.get("Phones");
         if (phones != null) {
             String phonesOnString = "";

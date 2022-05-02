@@ -19,6 +19,7 @@ public class DTOMapper {
     public DTOMapper(UserService userService) {
         this.userService = userService;
     }
+
     public Cafe fillCafeFromDTO(Cafe cafe, CafeRequest dto) {
         cafe.setName(dto.getName());
         cafe.setDescription(dto.getDescription());
@@ -43,6 +44,7 @@ public class DTOMapper {
 
         return cafe;
     }
+
     public Cafe toCafe(CafeRequest dto) {
         return fillCafeFromDTO(new Cafe(), dto);
     }
