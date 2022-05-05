@@ -3,7 +3,6 @@ package com.github.nazzrrg.wherecoffeeapplication.service;
 import com.github.nazzrrg.wherecoffeeapplication.model.*;
 import com.github.nazzrrg.wherecoffeeapplication.payload.request.CafeRequest;
 import com.github.nazzrrg.wherecoffeeapplication.payload.request.GradeRequest;
-import com.github.nazzrrg.wherecoffeeapplication.payload.request.PromotionRequest;
 import com.github.nazzrrg.wherecoffeeapplication.payload.response.MessageResponse;
 import com.github.nazzrrg.wherecoffeeapplication.payload.response.OwnershipClaimResponse;
 import com.github.nazzrrg.wherecoffeeapplication.repo.*;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -43,10 +41,17 @@ public class CafeService {
     /**
      * создание кофеен из API
      */
-    public boolean create(Cafe cafe) {
-        if (!(cafe.getIdApi() != null && repository.existsByIdApi(cafe.getIdApi()))) {
-            repository.save(cafe);
+    public boolean create(Cafe cafeFromApi) {
+        if (!repository.existsByIdApi(cafeFromApi.getIdApi())) {
+            repository.save(cafeFromApi);
             return true;
+        }
+        else {
+            Cafe cafeToBeUpdated = repository.findByIdApi(cafeFromApi.getIdApi()).get();
+            if (cafeToBeUpdated.getManager() == null) {
+                cafeToBeUpdated = mapper.updateCafeFromAPI(cafeToBeUpdated, cafeFromApi);
+                repository.save(cafeToBeUpdated);
+            }
         }
         return false;
     }
@@ -127,11 +132,6 @@ public class CafeService {
         Cafe cafe = getById(id);
         cafe.setConfirmed(true);
         repository.save(cafe);
-    }
-
-    public Page<Cafe> getPage(int page) {
-        Pageable pageable = PageRequest.of(page, itemsOnPage);
-        return repository.findAll(pageable);
     }
 
     public Page<Cafe> getPage(int page, int itemsOnPage, String location, Double dist, boolean confirmed,

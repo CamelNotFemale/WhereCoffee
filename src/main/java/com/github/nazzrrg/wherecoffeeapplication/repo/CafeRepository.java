@@ -14,6 +14,7 @@ import java.util.Optional;
 @Repository
 public interface CafeRepository extends JpaRepository<Cafe, Long> {
     Optional<Cafe> findById(Long id);
+    Optional<Cafe> findByIdApi(Long idApi);
     @Query("select c from Cafe c join fetch c.promotions p where c.id = :id and p.toDate >= current_date and p.fromDate <= current_date")
     Optional<Cafe> findByIdAndRelevantPromotions(Long id);
     boolean existsByIdApi(Long idApi);

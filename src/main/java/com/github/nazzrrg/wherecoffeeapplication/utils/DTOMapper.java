@@ -20,6 +20,40 @@ public class DTOMapper {
         this.userService = userService;
     }
 
+    private List<Hours> updateWorkingHours(List<Hours> hoursOld, List<Hours> hoursNew) {
+        for (Hours dayAPI: hoursNew) {
+            boolean isPresent = false;
+            for (Hours day: hoursOld) {
+                if (day.getWeekday().equals(dayAPI.getWeekday())) {
+                    day.setStart_time(dayAPI.getStart_time());
+                    day.setEnd_time(dayAPI.getEnd_time());
+                    isPresent = true;
+                    break;
+                }
+            }
+            if (!isPresent) hoursOld.add(dayAPI);
+        }
+        return hoursOld;
+    }
+
+    public Cafe updateCafeFromAPI(Cafe cafeToBeUpdated, Cafe cafeFromAPI) {
+        cafeToBeUpdated.setName(cafeFromAPI.getName());
+        cafeToBeUpdated.setDescription(cafeFromAPI.getDescription());
+        cafeToBeUpdated.setUrl(cafeFromAPI.getUrl());
+        cafeToBeUpdated.setPhone(cafeFromAPI.getPhone());
+        cafeToBeUpdated.setAddress(cafeFromAPI.getAddress());
+
+        List<Hours> workingHours = updateWorkingHours(cafeToBeUpdated.getWorkingHours(),
+                cafeFromAPI.getWorkingHours());
+        cafeToBeUpdated.setWorkingHours(workingHours);
+
+        Point newPoint = cafeFromAPI.getLocation();
+        cafeToBeUpdated.getLocation().setLng(newPoint.getLng());
+        cafeToBeUpdated.getLocation().setLat(newPoint.getLat());
+
+        return cafeToBeUpdated;
+    }
+
     public Cafe fillCafeFromDTO(Cafe cafe, CafeRequest dto) {
         cafe.setName(dto.getName());
         cafe.setDescription(dto.getDescription());
