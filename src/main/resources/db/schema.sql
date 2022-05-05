@@ -72,7 +72,7 @@ CREATE OR REPLACE FUNCTION process_rating_audit() RETURNS TRIGGER AS '
             -- пересчитываем средний рейтинг для DELETE
             IF (cur_count != 0) THEN
                 UPDATE cafeterias SET rating = cur_sum::double precision/cur_count
-                WHERE id = NEW.cafeteria_id;
+                WHERE id = OLD.cafeteria_id;
             ELSE
                 UPDATE cafeterias SET rating = NULL
                 WHERE id = OLD.cafeteria_id;

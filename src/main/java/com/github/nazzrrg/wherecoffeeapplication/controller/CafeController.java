@@ -57,10 +57,11 @@ public class CafeController {
                                   @RequestParam(value = "name", defaultValue = "") String name,
                                   @RequestParam(value = "manager", required = false) Long managerId,
                                   @RequestParam(value = "perks", defaultValue = "") List<String> perks,
-                                  @RequestParam(value = "is_opened", required = false) boolean isOpened) {
+                                  @RequestParam(value = "is_opened", required = false) boolean isOpened,
+                                  @RequestParam(value = "favorites", required = false) boolean favorites) {
         /** возвращать структуру Page, а не getContent()! */
         Page<Cafe> cafeterias = service.getPage(
-                page, itemsOnPage, location, dist, confirmed, minRating, name, managerId, perks, isOpened);
+                page, itemsOnPage, location, dist, confirmed, minRating, name, managerId, perks, isOpened, favorites);
         return cafeterias;
     }
 

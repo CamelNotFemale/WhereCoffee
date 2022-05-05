@@ -20,7 +20,7 @@ public interface CafeRepository extends JpaRepository<Cafe, Long> {
     boolean existsByIdApi(Long idApi);
 
     @Query(value =
-            "select distinct on (c.id) c.* from cafeterias c " +
+            "select c.* from cafeterias c " +
             "       left join hours h on c.id = h.cafe_id\n" +
             "       left join cafeterias_perks cp on c.id = cp.cafeteria_id\n" +
             "       left join perks p on p.id = cp.perk_id\n" +

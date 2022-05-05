@@ -134,9 +134,12 @@ public class CafeService {
         repository.save(cafe);
     }
 
-    public Page<Cafe> getPage(int page, int itemsOnPage, String location, Double dist, boolean confirmed,
-                              Double minRating, String name, Long managerId, List<String> perks, boolean isOpened) {
-        Pageable pageable = PageRequest.of(page, itemsOnPage, Sort.by(Sort.Direction.ASC, "id"));
+    public Page<Cafe> getPage(int page, int itemsOnPage, String location, Double dist, boolean confirmed, Double minRating,
+                              String name, Long managerId, List<String> perks, boolean isOpened, boolean favorites) {
+        Pageable pageable;
+        if (favorites) pageable = PageRequest.of(page, itemsOnPage, Sort.by(Sort.Direction.DESC, "favorites_count"));
+        else pageable = PageRequest.of(page, itemsOnPage, Sort.by(Sort.Direction.ASC, "id"));
+
         if (managerId != null) {
             return repository.findManagedCoffeeShops(managerId, pageable);
         } else if (confirmed) {
