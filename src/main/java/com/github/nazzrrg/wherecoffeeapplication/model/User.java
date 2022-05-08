@@ -3,6 +3,7 @@ package com.github.nazzrrg.wherecoffeeapplication.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.github.nazzrrg.wherecoffeeapplication.enumerations.ERole;
 import com.github.nazzrrg.wherecoffeeapplication.utils.CustomCafeSerializer;
 import lombok.Data;
 

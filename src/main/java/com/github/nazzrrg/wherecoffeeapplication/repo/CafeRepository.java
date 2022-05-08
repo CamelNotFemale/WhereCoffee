@@ -13,10 +13,14 @@ import java.util.Optional;
 
 @Repository
 public interface CafeRepository extends JpaRepository<Cafe, Long> {
+
     Optional<Cafe> findById(Long id);
+
     Optional<Cafe> findByIdApi(Long idApi);
+
     @Query("select c from Cafe c join fetch c.promotions p where c.id = :id and p.toDate >= current_date and p.fromDate <= current_date")
     Optional<Cafe> findByIdAndRelevantPromotions(Long id);
+
     boolean existsByIdApi(Long idApi);
 
     @Query(value =
@@ -46,6 +50,7 @@ public interface CafeRepository extends JpaRepository<Cafe, Long> {
             "where manager = :managerId",
             nativeQuery = true)
     Page<Cafe> findManagedCoffeeShops(long managerId, Pageable pageable);
+
     /*@Query(value =
             "select " +
             "    case when count(*) > 0 then 'TRUE' else 'FALSE' end as is_manager " +
@@ -54,6 +59,7 @@ public interface CafeRepository extends JpaRepository<Cafe, Long> {
             "limit 1",
             nativeQuery = true)
     boolean isACafeteriaManager(Long cafeId, Long userId);*/
+
     @Query(value =
             "select" +
             "       case when count(*) > 0 then 'TRUE' else 'FALSE' end as exist_comment" +
@@ -62,17 +68,17 @@ public interface CafeRepository extends JpaRepository<Cafe, Long> {
             "limit 1",
             nativeQuery = true)
     boolean alreadyInFavorites(Long cafeId, Long userId);
+
     @Query(value =
             "insert into user_cafeterias values (:userId, :cafeId)",
             nativeQuery = true)
     @Modifying
-    @Transactional
     int addToFavorites(Long cafeId, Long userId);
+
     @Query(value =
             "delete from user_cafeterias " +
             "where cafeteria_id = :cafeId and user_id = :userId",
             nativeQuery = true)
     @Modifying
-    @Transactional
     int deleteFromFavorites(Long cafeId, Long userId);
 }

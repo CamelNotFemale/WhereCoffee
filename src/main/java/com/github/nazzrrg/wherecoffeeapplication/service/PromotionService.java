@@ -113,4 +113,9 @@ public class PromotionService {
                     .body(new MessageResponse("Error: сan't delete someone else's promotion!"));
         }
     }
+
+    @Transactional
+    public void deleteIrrelevantPromotions() {
+        promotionRepository.deleteIrrelevantPromotions();
+    }
 }

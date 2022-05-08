@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.github.nazzrrg.wherecoffeeapplication.model.ERole;
+import com.github.nazzrrg.wherecoffeeapplication.enumerations.ERole;
 import com.github.nazzrrg.wherecoffeeapplication.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

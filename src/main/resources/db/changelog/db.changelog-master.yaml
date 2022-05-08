@@ -138,6 +138,60 @@ databaseChangeLog:
               - column:
                   name: title
                   value: "STREET_TERRACE"
+        - insert:
+            tableName: perks
+            columns:
+              - column:
+                  name: id
+                  value: "4"
+              - column:
+                  name: title
+                  value: "CHARGER"
+        - insert:
+            tableName: perks
+            columns:
+              - column:
+                  name: id
+                  value: "5"
+              - column:
+                  name: title
+                  value: "VEGETARIAN"
+        - insert:
+            tableName: perks
+            columns:
+              - column:
+                  name: id
+                  value: "6"
+              - column:
+                  name: title
+                  value: "TOPPINGS"
+        - insert:
+            tableName: perks
+            columns:
+              - column:
+                  name: id
+                  value: "7"
+              - column:
+                  name: title
+                  value: "SOCKET"
+        - insert:
+            tableName: perks
+            columns:
+              - column:
+                  name: id
+                  value: "8"
+              - column:
+                  name: title
+                  value: "GRAIN_COFFEE"
+        - insert:
+            tableName: perks
+            columns:
+              - column:
+                  name: id
+                  value: "9"
+              - column:
+                  name: title
+                  value: "WIFI"
   - changeSet:
       id: 6
       author: java

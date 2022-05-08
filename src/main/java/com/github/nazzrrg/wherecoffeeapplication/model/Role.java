@@ -1,5 +1,6 @@
 package com.github.nazzrrg.wherecoffeeapplication.model;
 
+import com.github.nazzrrg.wherecoffeeapplication.enumerations.ERole;
 import lombok.Data;
 
 import javax.persistence.*;

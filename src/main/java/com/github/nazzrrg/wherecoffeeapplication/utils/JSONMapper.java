@@ -26,6 +26,11 @@ public class JSONMapper {
         List<Hours> workingHours = new ArrayList<>();
 
         JSONArray availabilities = (JSONArray) jo.get("Availabilities");
+
+        if (availabilities == null) {
+            return workingHours;
+        }
+
         for (Object o : availabilities) {
             JSONObject availability = (JSONObject) o;
             String from;

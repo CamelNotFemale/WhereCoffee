@@ -7,7 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface OwnershipRepository extends JpaRepository<OwnershipClaim, Long> {
+
     Page<OwnershipClaim> findAll(Pageable pageable);
+
     @Query(value =
             "select" +
             "       case when count(*) > 0 then 'TRUE' else 'FALSE' end as exist_claim" +

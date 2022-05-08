@@ -1,6 +1,7 @@
 package com.github.nazzrrg.wherecoffeeapplication.security.jwt;
 
 import com.github.nazzrrg.wherecoffeeapplication.security.services.UserDetailsImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @Component
+@Slf4j
 public class JwtUtils {
 
     @Value("${netcracker.app.jwtSecret}")
@@ -42,15 +44,15 @@ public class JwtUtils {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
             return true;
         } catch (SignatureException e) {
-            System.err.println("Invalid JWT signature: " + e.getMessage());
+            log.error("Invalid JWT signature: " + e.getMessage());
         } catch (MalformedJwtException e) {
-            System.err.println("Invalid JWT token: " + e.getMessage());
+            log.error("Invalid JWT token: " + e.getMessage());
         } catch (ExpiredJwtException e) {
-            System.err.println("JWT token is expired: " + e.getMessage());
+            log.error("JWT token is expired: " + e.getMessage());
         } catch (UnsupportedJwtException e) {
-            System.err.println("JWT token is unsupported: " + e.getMessage());
+            log.error("JWT token is unsupported: " + e.getMessage());
         } catch (IllegalArgumentException e) {
-            System.err.println("JWT claims string is empty: " + e.getMessage());
+            log.error("JWT claims string is empty: " + e.getMessage());
         }
 
         return false;

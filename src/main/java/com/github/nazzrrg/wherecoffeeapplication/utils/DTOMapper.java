@@ -43,9 +43,11 @@ public class DTOMapper {
         cafeToBeUpdated.setPhone(cafeFromAPI.getPhone());
         cafeToBeUpdated.setAddress(cafeFromAPI.getAddress());
 
-        List<Hours> workingHours = updateWorkingHours(cafeToBeUpdated.getWorkingHours(),
-                cafeFromAPI.getWorkingHours());
-        cafeToBeUpdated.setWorkingHours(workingHours);
+        if (cafeFromAPI.getWorkingHours() != null) {
+            List<Hours> workingHours = updateWorkingHours(cafeToBeUpdated.getWorkingHours(),
+                    cafeFromAPI.getWorkingHours());
+            cafeToBeUpdated.setWorkingHours(workingHours);
+        }
 
         Point newPoint = cafeFromAPI.getLocation();
         cafeToBeUpdated.getLocation().setLng(newPoint.getLng());

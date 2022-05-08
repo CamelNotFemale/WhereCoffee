@@ -10,16 +10,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface PromotionRepository extends JpaRepository<Promotion, Long> {
+
     @Modifying
-    @Transactional
     @Query(value =
             "delete from cafeterias_promotions " +
             "where promotion_id = :promoId", nativeQuery = true)
     int deletePromotionLinksByPromoId(Long promoId);
+
     Page<Promotion> findAllByUser(User user, Pageable pageable);
 
     @Modifying
-    @Transactional
     @Query(value =
             "set TIMEZONE = 'Europe/Moscow'; " +
             "delete from cafeterias_promotions " +

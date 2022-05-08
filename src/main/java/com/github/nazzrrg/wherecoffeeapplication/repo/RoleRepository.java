@@ -1,6 +1,6 @@
 package com.github.nazzrrg.wherecoffeeapplication.repo;
 
-import com.github.nazzrrg.wherecoffeeapplication.model.ERole;
+import com.github.nazzrrg.wherecoffeeapplication.enumerations.ERole;
 import com.github.nazzrrg.wherecoffeeapplication.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

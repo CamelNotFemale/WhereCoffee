@@ -1,5 +1,6 @@
 package com.github.nazzrrg.wherecoffeeapplication.service;
 
+import com.github.nazzrrg.wherecoffeeapplication.enumerations.EPerk;
 import com.github.nazzrrg.wherecoffeeapplication.model.*;
 import com.github.nazzrrg.wherecoffeeapplication.payload.request.CafeRequest;
 import com.github.nazzrrg.wherecoffeeapplication.payload.request.GradeRequest;
@@ -41,6 +42,7 @@ public class CafeService {
     /**
      * создание кофеен из API
      */
+    @Transactional
     public boolean create(Cafe cafeFromApi) {
         if (!repository.existsByIdApi(cafeFromApi.getIdApi())) {
             repository.save(cafeFromApi);
@@ -59,6 +61,7 @@ public class CafeService {
     /**
      * создание собственных кофеен
      */
+    @Transactional
     public void create(CafeRequest cafeRequest) {
         Cafe cafe = mapper.toCafe(cafeRequest);
         repository.save(cafe);
@@ -225,6 +228,8 @@ public class CafeService {
     public boolean checkFavorites(long cafeId, long userId) {
         return repository.alreadyInFavorites(cafeId, userId);
     }
+
+    @Transactional
     public ResponseEntity<MessageResponse> addToFavorites(long cafeId, long userId) {
         if (repository.alreadyInFavorites(cafeId, userId)) {
             repository.deleteFromFavorites(cafeId, userId);

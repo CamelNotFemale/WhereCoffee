@@ -2,6 +2,7 @@ package com.github.nazzrrg.wherecoffeeapplication.config;
 
 import com.github.nazzrrg.wherecoffeeapplication.controller.CafeController;
 import com.github.nazzrrg.wherecoffeeapplication.repo.PromotionRepository;
+import com.github.nazzrrg.wherecoffeeapplication.service.PromotionService;
 import com.github.nazzrrg.wherecoffeeapplication.service.YandexMapService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -20,11 +21,11 @@ public class SchedulerConfig {
     @Value("${netcracker.app.mapAPI}")
     private String apikey;
     private final YandexMapService mapService;
-    private final PromotionRepository promotionRepository;
+    private final PromotionService promotionService;
 
-    public SchedulerConfig(YandexMapService mapService, PromotionRepository promotionRepository) {
+    public SchedulerConfig(YandexMapService mapService, PromotionService promotionService) {
         this.mapService = mapService;
-        this.promotionRepository = promotionRepository;
+        this.promotionService = promotionService;
     }
 
     @Scheduled(cron = "0 0 3 * * *") // everyday in 3 a.m.
@@ -34,6 +35,6 @@ public class SchedulerConfig {
 
     @Scheduled(cron = "0 0 2 * * *") // everyday in 2 a.m.
     private void deleteIrrelevantPromotions() {
-        promotionRepository.deleteIrrelevantPromotions();
+        promotionService.deleteIrrelevantPromotions();
     }
 }
