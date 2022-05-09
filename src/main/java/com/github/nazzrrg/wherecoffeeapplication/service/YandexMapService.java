@@ -9,6 +9,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -47,6 +48,7 @@ public class YandexMapService {
         return count;
     }
 
+    @Transactional
     public ResponseEntity<MessageResponse> updateCafeterias(Integer res, String areas,
                                                             String urlPattern, String apikey) {
         int count = 0, size = 0;

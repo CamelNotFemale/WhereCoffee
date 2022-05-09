@@ -17,7 +17,6 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "${netcracker.front.api}", maxAge = 3600, allowCredentials = "true")
 public class UserController {
     private final UserService service;
 

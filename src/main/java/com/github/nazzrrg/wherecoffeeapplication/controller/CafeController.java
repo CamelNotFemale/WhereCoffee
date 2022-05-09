@@ -28,7 +28,6 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-@CrossOrigin(origins = "${netcracker.front.api}", maxAge = 3600, allowCredentials = "true")
 @RestController
 @RequestMapping("/cafeterias")
 public class CafeController {
