@@ -1,0 +1,226 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/db.changelog-master.yaml
+  - changeSet:
+      id: 1
+      author: postgres
+      comment: "init changes"
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: "John"
+              - column:
+                  name: email
+                  value: "John@domain.com"
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: "Julie"
+              - column:
+                  name: email
+                  value: "Julie@domain.com"
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: "Jennifer"
+              - column:
+                  name: email
+                  value: "Jennifer@domain.com"
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: "Helen"
+              - column:
+                  name: email
+                  value: "Helen@domain.com"
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: "Rachel"
+              - column:
+                  name: email
+                  value: "Rachel@domain.com"
+  - changeSet:
+      id: 2
+      author: postgres
+      comment: "init roles"
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: "ROLE_USER"
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: "ROLE_MODERATOR"
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: "ROLE_ADMIN"
+
+  - changeSet:
+      id: 3
+      author: java
+      comment: "create admin record"
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: "admin"
+              - column:
+                  name: email
+                  value: "admin@admin.com"
+              - column:
+                  name: password
+                  value: "$2a$10$l6ZOGRkCJhgAqCSSl2gEoOehXONlHNfZRlHCj288fx4KqDwGByAFi"
+
+  - changeSet:
+      id: 4
+      author: java
+      comment: "create admin record"
+      changes:
+        - insert:
+            tableName: user_roles
+            columns:
+              - column:
+                  name: user_id
+                  valueComputed: "(SELECT id FROM users WHERE username='admin')"
+              - column:
+                  name: role_id
+                  valueComputed: "(SELECT id FROM roles WHERE name='ROLE_ADMIN')"
+  - changeSet:
+      id: 5
+      author: postgres
+      comment: "init perks"
+      changes:
+        - insert:
+            tableName: perks
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: title
+                  value: "FREE_WATER"
+        - insert:
+            tableName: perks
+            columns:
+              - column:
+                  name: id
+                  value: "2"
+              - column:
+                  name: title
+                  value: "TOILET"
+        - insert:
+            tableName: perks
+            columns:
+              - column:
+                  name: id
+                  value: "3"
+              - column:
+                  name: title
+                  value: "STREET_TERRACE"
+        - insert:
+            tableName: perks
+            columns:
+              - column:
+                  name: id
+                  value: "4"
+              - column:
+                  name: title
+                  value: "CHARGER"
+        - insert:
+            tableName: perks
+            columns:
+              - column:
+                  name: id
+                  value: "5"
+              - column:
+                  name: title
+                  value: "VEGETARIAN"
+        - insert:
+            tableName: perks
+            columns:
+              - column:
+                  name: id
+                  value: "6"
+              - column:
+                  name: title
+                  value: "TOPPINGS"
+        - insert:
+            tableName: perks
+            columns:
+              - column:
+                  name: id
+                  value: "7"
+              - column:
+                  name: title
+                  value: "SOCKET"
+        - insert:
+            tableName: perks
+            columns:
+              - column:
+                  name: id
+                  value: "8"
+              - column:
+                  name: title
+                  value: "GRAIN_COFFEE"
+        - insert:
+            tableName: perks
+            columns:
+              - column:
+                  name: id
+                  value: "9"
+              - column:
+                  name: title
+                  value: "WIFI"
+  - changeSet:
+      id: 6
+      author: java
+      comment: "create moderator record"
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: "mod"
+              - column:
+                  name: email
+                  value: "mod@mod.com"
+              - column:
+                  name: password
+                  value: "$2a$10$/lCSFzbZMBBrSqWPDqa2.ORnuXxGQSpLlkmKFaG6zbk.j13jHfxRe"
+
+  - changeSet:
+      id: 7
+      author: java
+      comment: "create moderator record"
+      changes:
+        - insert:
+            tableName: user_roles
+            columns:
+              - column:
+                  name: user_id
+                  valueComputed: "(SELECT id FROM users WHERE username='mod')"
+              - column:
+                  name: role_id
+                  valueComputed: "(SELECT id FROM roles WHERE name='ROLE_MODERATOR')"
