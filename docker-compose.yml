@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+#  postgres:
+#    image: 'postgres:10'
+#    container_name: 'java-postgres'
+#    environment:
+#      - 'POSTGRES_USER=postgres'
+#      - 'POSTGRES_PASSWORD=qwerty'
+#      - 'POSTGRES_DB=coffee_shops'
+
+  backend-app:
+    build: ./
+    container_name: 'backend-app'
+#    environment:
+#      - "SPRING_PROFILES_ACTIVE=dev" # задание профиля
+#    ports:
+#      - '8080:8080'
+    network_mode: host # позволяет подключаться ко внешней БД, все порты совпадают с хостом
+
+  frontend-app:
+    build: ../WhereCoffeeFront/
+    container_name: 'frontend-app'
+    ports:
+      - '4200:4200'
+# Для связи нужна ссылка в application.properties следующего вида (postgres:5432)
+# spring.datasource.url=jdbc:postgresql://postgres:5432/coffee_shops

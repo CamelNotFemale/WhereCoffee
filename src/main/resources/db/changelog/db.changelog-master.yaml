@@ -1,56 +1,6 @@
 databaseChangeLog:
   - logicalFilePath: db/changelog/db.changelog-master.yaml
   - changeSet:
-      id: 1
-      author: postgres
-      comment: "init changes"
-      changes:
-        - insert:
-            tableName: users
-            columns:
-              - column:
-                  name: username
-                  value: "John"
-              - column:
-                  name: email
-                  value: "John@domain.com"
-        - insert:
-            tableName: users
-            columns:
-              - column:
-                  name: username
-                  value: "Julie"
-              - column:
-                  name: email
-                  value: "Julie@domain.com"
-        - insert:
-            tableName: users
-            columns:
-              - column:
-                  name: username
-                  value: "Jennifer"
-              - column:
-                  name: email
-                  value: "Jennifer@domain.com"
-        - insert:
-            tableName: users
-            columns:
-              - column:
-                  name: username
-                  value: "Helen"
-              - column:
-                  name: email
-                  value: "Helen@domain.com"
-        - insert:
-            tableName: users
-            columns:
-              - column:
-                  name: username
-                  value: "Rachel"
-              - column:
-                  name: email
-                  value: "Rachel@domain.com"
-  - changeSet:
       id: 2
       author: postgres
       comment: "init roles"
@@ -82,6 +32,9 @@ databaseChangeLog:
         - insert:
             tableName: users
             columns:
+              - column:
+                    name: id
+                    value: 0
               - column:
                   name: username
                   value: "admin"
@@ -200,6 +153,9 @@ databaseChangeLog:
         - insert:
             tableName: users
             columns:
+              - column:
+                    name: id
+                    value: 1
               - column:
                   name: username
                   value: "mod"
